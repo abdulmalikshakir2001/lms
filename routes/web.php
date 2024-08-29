@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\PermissionsController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +17,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('html.index');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('html.index');
+    })->name('dashboard');
+
+    // Roles
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    
+    // Permissions
+    Route::get('/permissions/create', [PermissionsController::class, 'create'])->name('permissions.create');
+    Route::post('/permissions', [PermissionsController::class, 'store'])->name('permissions.store');
+    Route::get('/permissions', [PermissionsController::class, 'index'])->name('permissions.index');
+    Route::get('/permissions/{id}/edit', [PermissionsController::class, 'edit'])->name('permissions.edit');
+    Route::put('/permissions', [PermissionsController::class, 'update'])->name('permissions.update');
+    Route::delete('/permissions/{id}', [PermissionsController::class, 'destroy'])->name('permissions.destroy');
+
+    // Users
+    Route::get('users',[UserController::class, 'index'])->name('users.index');
+    Route::get('users/create',[UserController::class, 'create'])->name('users.create');
+    Route::post('users/store',[UserController::class, 'store'])->name('users.store');
+    Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
+
 });
+
+
+// Include the authentication routes
+require __DIR__.'/auth.php';
