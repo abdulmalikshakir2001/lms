@@ -11,6 +11,7 @@
         <!-- Navbar -->
         
         @include('theme-layout.navBar')
+        @include('theme-layout.msgs')
 
         <!-- / Navbar -->
 
@@ -21,72 +22,38 @@
           <div class="container-xxl flex-grow-1 container-p-y">
             
             <div class="card">
-                <div class="row card-header">
+                <div class="row card-header pb-0">
                     <div class="col-md-6">
                         <h5>Permissions</h5>
                     </div>
-                    <div class="col-md-2 offset-4">
+                    <div class="col-md-1 offset-5">
                         <button
-                    type="button"
-                    class="btn btn-primary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#basicModal">
-                      Add Permission
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#basicModal">
+                          Add 
                       </button>
                     </div>
                 </div>
                 
-                <div class="table-responsive text-nowrap">
-                  <table class="table">
+                <div class="table-responsive text-nowrap p-5 m-0">
+                  <table class="table table-hover datatable" id="datatable">
                     <thead>
-                      <tr>
-                        <th class="col-md-2">Sr No:</th>
-                        <th class="col-md-8">Permission</th>
-                        <th class="col-md-2">Actions</th>
+                      <tr class="">
+                        <th class="col-md-2 py-4">Sr No:</th>
+                        <th class="col-md-8 py-4">Permission</th>
+                        <th class="col-md-2 py-4">Actions</th>
                       </tr>
                     </thead>
-                    <tbody class="table-border-bottom-0">
-                        @if ($permissions->isNotEmpty())
-                       @php
-                            $i = 1;
-                       @endphp
-                        @foreach ($permissions as $permission)
-                        <tr>
-                            <td>{{$i }}</td>
-                            <td>{{ $permission->name }}</td>
-                            <td>
-                              <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                  <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                  <a class="dropdown-item" href="javascript:void(0)"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#basicModalEdit-{{$permission->id}}"
-                                    ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                                  >
-                                  <form action="{{ route('permissions.destroy', ['id' => $permission->id]) }}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this permission?');">
-                                        <i class="bx bx-trash me-1"></i> Delete
-                                    </button>
-                                </form>
-                                
-                                  
-                                </div>
-                              </div>
-                            </td>
-                          </tr> 
-                          
-                          @include('permissions.edit')
-                          @php
-                           $i++;
+                    <tbody>
 
-                          @endphp
+                      @if ($permissions->isNotEmpty())
+                        @foreach ($permissions as $permission)
+                            @include('permissions.edit')
                         @endforeach
+                      @endif
                         
-                        @endif
                       
                       
                     </tbody>
@@ -96,23 +63,10 @@
           </div>
           <!-- / Content -->
 
-          <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel3">Edit Roles</h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                </div>
-                <form action="{{ route('roles.store') }}" method="post">
-                  @csrf
-                <div class="modal-body">
-
         
 
+        
+          @include('theme-layout.confirmDeleteModals')
           <div class="content-backdrop fade"></div>
         </div>
         <!-- Content wrapper -->
@@ -125,4 +79,39 @@
   </div>
     
   </div>
+
+  <script>
+    $(document).on('click', '.delete-permission', function() {
+    var permissionId = $(this).data('id');
+    var formAction = '{{ route("permissions.destroy", ":id") }}'; // Placeholder route
+    formAction = formAction.replace(':id', permissionId); // Replace with actual permission ID
+    $('#deleteForm').attr('action', formAction); // Set the form action dynamically
+});
+
+  $(document).ready(function () {
+    $("#datatable").DataTable({
+        processing: true,
+        serverSide: true,
+        order: [[0, "desc"]],
+        ajax: "{{ url('permissions-data') }}",
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', title: 'Sr No', orderable: false, searchable: false },
+            { data: "name", name: "name" },  // Permission
+            { 
+                data: "action", 
+                name: "action", 
+                orderable: false, 
+                searchable: false 
+            }  // Actions
+        ],
+          pagingType:"full_numbers",
+          language: {
+            lengthMenu: "Show  _MENU_  records per page",
+        },
+        responsive: true,  // Make table responsive
+        autoWidth: false   // Disable automatic column width calculation
+    });
+});
+
+</script>
 @endsection

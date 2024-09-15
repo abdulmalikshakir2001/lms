@@ -6,6 +6,8 @@
     </div>
 </div>
 <h5>Permissions</h5>
+
+
 <div class="row">
     @foreach ($permissions as $permission)
     <div class="col-md-2">

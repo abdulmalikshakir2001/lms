@@ -57,7 +57,7 @@ class RoleController extends Controller
             return redirect()->route('roles.index')->with('success','Role Added successfully');
         }
         else {
-            return redirect()->route('roles.index')->withInput()->withErrors($validator);
+            return redirect()->route('roles.index')->withErrors($validator)->withInput();
         }
     }
     public function edit($id) {
@@ -98,14 +98,14 @@ class RoleController extends Controller
             return redirect()->route('roles.index')->with('success', 'Role updated successfully');
         } else {
             // Redirect back to the edit form with errors and input data
-            return redirect()->back()->withInput()->withErrors($validator);
+            return redirect()->route('roles.index')->with('error', $validator);
         }
     }
     
     public function destroy(Request $request) {
+
         $id = $request->id;
         $role = Role::find($id);
-
        
         if ($role == null) {
          
@@ -116,9 +116,46 @@ class RoleController extends Controller
          $role->delete();
          return redirect()->route('roles.index')->with('success', 'Role deleted successfully');
 
-        
-
     }
+
+
+
+    public function getData(Request $request) {
+        if ($request->ajax()) {
+            $roles = Role::with('permissions')->select(['id', 'name'])->get();
+    
+            return datatables()->of($roles)
+            ->addColumn('permissions', function ($row) {
+                return $row->permissions->map(function ($permission) {
+                    return '<span class="badge bg-label-success">' . $permission->name . '</span>';
+                })->implode(' ');
+            })
+            ->addColumn('action', function ($row) {
+                return '<div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item edit-role" href="#" 
+                                   data-id="' . $row->id . '" 
+                                   data-bs-toggle="modal" 
+                                   data-bs-target="#editModal">
+                                   <i class="bx bx-edit-alt me-1"></i> Edit
+                                </a>
+                                <button type="button" class="dropdown-item delete-role" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    <i class="bx bx-trash me-1"></i> Delete
+                                </button>
+                            </div>
+                        </div>';
+            })
+            ->rawColumns(['permissions', 'action'])
+            ->make(true);
+        
+        
+        }
+    }
+    
+    
 
 }
 

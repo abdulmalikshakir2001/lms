@@ -14,14 +14,64 @@
   <link rel="stylesheet" href="{{ asset('assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css"/>
   <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
   
+  
   <!-- Vendors CSS -->
   <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
   <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
-  
+  <link rel="stylesheet" href="{{ asset('datatables.min.css') }}"/>
   <!-- Page CSS -->
-  
+  <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.9.2/semantic.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.semanticui.css">
+
   <!-- Helpers -->
   <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
   <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
   <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
   <script src="{{ asset('js/config.js') }}"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+  <link rel="stylesheet" href="{{ asset('assets/css/customCss.css') }}" />
+  {{-- <style>
+
+    /* Custom DataTable Styles */
+#datatable_wrapper .dataTables_filter {
+    float: right;
+    text-align: right;
+}
+
+#datatable_wrapper .dataTables_filter input {
+    width: 200px;
+    margin-left: 0.5em;
+}
+
+#datatable_wrapper .dataTables_length {
+    float: left;
+}
+
+#datatable_wrapper .dataTables_info {
+    font-size: 0.9em;
+    padding-top: 0.85em;
+}
+
+#datatable_wrapper .dataTables_paginate {
+    float: right;
+    padding-top: 0.25em;
+}
+
+/* Style for pagination */
+#datatable_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.2em 0.8em;
+    margin-left: 2px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    color: #007bff;
+}
+
+#datatable_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #f8f9fa;
+    border: 1px solid #007bff;
+}
+
+  </style> --}}

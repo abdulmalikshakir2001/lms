@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html
   lang="en"
   class="light-style layout-menu-fixed layout-compact"

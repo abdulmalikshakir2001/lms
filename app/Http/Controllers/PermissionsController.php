@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class PermissionsController extends Controller
 {
@@ -40,7 +42,7 @@ class PermissionsController extends Controller
             return redirect()->route('permissions.index')->with('success','Permission Added successfully');
         }
         else {
-            return redirect()->route('permissions.create')->withInput()->withErrors($validator);
+            return redirect()->route('permissions.index')->withInput()->withErrors($validator);
         }
     }
 
@@ -71,9 +73,9 @@ class PermissionsController extends Controller
         $id = $request->permission_id;
         $permissions = Permission::findOrFail($id);
 
-        $validator = Validator::make($request->all(),[ 
-            'name' => 'required|unique:permissions|min:3'
-        ]);
+        $validator = Validator::make($request->all(), [ 
+            'name' => 'required|min:3|unique:permissions,name,' . $id,
+        ]);        
 
         if ($validator->passes()) {
            
@@ -82,7 +84,7 @@ class PermissionsController extends Controller
             return redirect()->route('permissions.index')->with('success','Permission Updated successfully');
         }
         else {
-            return redirect()->route('permissions.edit',$id)->withInput()->withErrors($validator);
+            return redirect()->route('permissions.index')->withInput()->withErrors($validator);
         }
     }
 
@@ -95,7 +97,7 @@ class PermissionsController extends Controller
         $permission = Permission::find($id);
         if ($permission == null) {
            
-            return redirect()->route('roles.index')->with('error','Permission Not Found');
+            return redirect()->route('permissions.index')->with('error','Permission Not Found');
         }
         else {
             $permission->delete();
@@ -103,4 +105,32 @@ class PermissionsController extends Controller
         }
  
      }
+
+     public function getData(Request $request) {
+        if ($request->ajax()) {
+            $permissions = Permission::select(['id', 'name'])->get();
+    
+            return datatables()->of($permissions)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                return '<div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#basicModalEdit-' . $row->id . '">
+                                    <i class="bx bx-edit-alt me-1"></i> Edit
+                                </a>
+                                <button type="button" class="dropdown-item delete-permission" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    <i class="bx bx-trash me-1"></i> Delete
+                                </button>
+                            </div>
+                        </div>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+        
+        }
+    }
+    
 }

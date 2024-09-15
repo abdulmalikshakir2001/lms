@@ -55,7 +55,7 @@ class UserController extends Controller
                 $user->syncRoles([]);
             }
 
-            return redirect()->route('users.index')->with('success','User Updated successfully');
+            return redirect()->route('users.index')->with('success','User Added successfully');
         }
         else {
             return redirect()->route('users.create')->withInput()->withErrors($validator);
@@ -111,7 +111,7 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('success','User Updated successfully');
         }
         else {
-            return redirect()->route('users.edit')->withInput()->withErrors($validator);
+            return redirect()->route('users.edit')->withErrors($validator)->withInput();
         }
     }
 
@@ -131,4 +131,49 @@ class UserController extends Controller
 
         }
     }
+
+    public function getUsersData(Request $request)
+{
+    if ($request->ajax()) {
+        $users = User::with('roles')->select(['id', 'name', 'email']); // Adjust as per your database
+
+        return datatables()->of($users)
+    ->addIndexColumn() // Adds automatic row numbering
+    ->addColumn('roles', function ($row) {
+        return $row->roles->map(function ($role) {
+            return '<span class="badge bg-label-primary">' . $role->name . '</span>';
+        })->implode(' ');  // Join the badges with a space in between
+    })
+    ->addColumn('action', function ($row) {
+        return '<div class="dropdown">
+            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                <i class="bx bx-dots-vertical-rounded"></i>
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="'.route('users.edit', $row->id).'">
+                    <i class="bx bx-edit-alt me-1"></i> Edit
+                </a>
+                <button type="button" class="dropdown-item delete-button" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="bx bx-trash me-1"></i> Delete
+                </button>
+            </div>
+        </div>';
+    })
+    ->rawColumns(['roles','action']) // Make the action column raw HTML
+    ->make(true);
+
+    }
+}
+
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids'); // Array of selected user IDs
+        if (!empty($ids)) {
+            User::whereIn('id', $ids)->delete();  // Delete users with the selected IDs
+        }
+        
+        return response()->json(['success' => 'Users deleted successfully.']);
+    }
+
 }

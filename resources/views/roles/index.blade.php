@@ -11,6 +11,11 @@
         <!-- Navbar -->
         
         @include('theme-layout.navBar')
+        <div class="row">
+          <div class="col-md-3 offset-9">
+            @include('theme-layout.msgs')
+          </div>
+        </div>
 
         <!-- / Navbar -->
 
@@ -21,7 +26,7 @@
           <div class="container-xxl flex-grow-1 container-p-y">
             
             <div class="card">
-                <div class="row card-header">
+                <div class="row card-header pb-0">
                     <div class="col-md-6">
                         <h5>Roles</h5>
                     </div>
@@ -36,70 +41,21 @@
                     </div>
                 </div>
                 
-                <div class="table-responsive text-nowrap">
-                  <table class="table">
+                <div class="table-responsive text-nowrap p-5 m-0">
+                  <table class="table" id="datatable">
                     <thead>
-                      <tr>
-                        <th class="col-md-2">Sr No:</th>
-                        <th class="col-md-2">Role</th>
-                        <th class="col-md-6">Permissions</th>
-                        <th class="col-md-2">Actions</th>
-                      </tr>
+                        <tr>
+                            <th class="col-md-2 py-4">Sr No:</th>
+                            <th class="col-md-2 py-4">Role</th>
+                            <th class="col-md-6 py-4">Permissions</th>
+                            <th class="col-md-2 py-4">Actions</th>
+                        </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                        @if ($roles->isNotEmpty())
-                       @php
-                            $i = 1;
-                       @endphp
-                        @foreach ($roles as $role)
-                        <tr>
-                            <td>{{$i }}</td>
-                            <td>{{ $role->name }}</td>
-                            <td class="px-6 py-3 text-left">{{ $role->permissions->pluck('name')->implode(', ') }}</td>
-                            <td>
-                              <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                  <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                  <a class="dropdown-item edit-role" href="#" 
-                                    data-id="{{ $role->id }}" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#editModal">
-                                    <i class="bx bx-edit-alt me-1"></i> Edit
-                                  </a>
 
-                                  {{-- <form action="{{ route('roles.destroy', ['id' => $role->id]) }}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this permission?');">
-                                        <i class="bx bx-trash me-1"></i> Delete
-                                    </button>
-                                  </form> --}}
-                                
-                                  
-                                </div>
-                              </div>
-                            </td>
-                          </tr> 
-                          
-                          @php
-                           $i++;
-
-                          @endphp
-                        @endforeach
-
-                        
-                        
-                        @endif
-
-
-                       
-                     
-                      
-                      
                     </tbody>
-                  </table>
+                </table>
+                
                 </div>
               </div>
           </div>
@@ -117,19 +73,19 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
                 </div>
-                <form id="editRoleForm" action="{{ route('roles.update', ['id' => $role->id]) }}" method="post">
+                <form id="editRoleForm" action="" method="post">
                   @csrf
                   @method('put')
-                <div class="modal-body">
-                
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                      Close
-                    </button>
-                    <button type="submit" class="btn btn-primary mx-3">Save Changes</button>
+                  <div class="modal-body">
+                      <!-- Modal content will be loaded via AJAX -->
                   </div>
-                </form>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                          Close
+                      </button>
+                      <button type="submit" class="btn btn-primary mx-3">Save Changes</button>
+                  </div>
+              </form>              
                 </div>
               </div>
             </div>
@@ -149,13 +105,14 @@
 
   </div>
 
+  @include('theme-layout.confirmDeleteModals')
  
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script>
-    $(document).on('click', '.edit-role', function (e) {
+$(document).on('click', '.edit-role', function (e) {
     e.preventDefault();
 
     var roleId = $(this).data('id');
@@ -177,5 +134,35 @@
     });
 });
 
-  </script>
+
+
+$(document).ready(function () {
+    $("#datatable").DataTable({
+        processing: true,
+        serverSide: true,
+        order: [[0, "desc"]],
+        ajax: "{{ url('roles-data') }}",
+        columns: [
+            { data: "id", name: "id" },           // Sr No:
+            { data: "name", name: "name" },       // Role
+            { data: "permissions", name: "permissions", orderable: false, searchable: false },  // Permissions
+            { data: "action", name: "action", orderable: false, searchable: false }  // Actions
+        ],
+        pagingType: "full_numbers",
+        language: {
+            lengthMenu: "Show _MENU_ records per page"
+        },
+        responsive: true,  // Make table responsive
+        autoWidth: false   // Disable automatic column width calculation
+    });
+});
+
+$(document).on('click', '.delete-role', function() {
+    var roleId = $(this).data('id');
+    var formAction = '{{ route("roles.destroy", ":id") }}'; // Placeholder route
+    formAction = formAction.replace(':id', roleId); // Replace with actual role ID
+    $('#deleteForm').attr('action', formAction); // Set the form action dynamically
+});
+
+</script>
 @endsection

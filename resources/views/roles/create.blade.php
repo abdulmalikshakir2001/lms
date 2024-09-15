@@ -37,7 +37,7 @@
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
           Close
         </button>
-        <button type="submit" class="btn btn-primary">Add Role</button>
+        <button type="submit" class="btn btn-primary mx-3">Add Role</button>
       </div>
     </form>
     </div>

@@ -11,6 +11,7 @@
         <!-- Navbar -->
         
         @include('theme-layout.navBar')
+        @include('theme-layout.msgs')
 
         <!-- / Navbar -->
       
@@ -127,7 +128,7 @@
                         
                         <div class="row justify-content-end">
                           <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Add User</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                           </div>
                         </div>
                       </form>

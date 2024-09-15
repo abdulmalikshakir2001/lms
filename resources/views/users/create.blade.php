@@ -11,6 +11,8 @@
         <!-- Navbar -->
         
         @include('theme-layout.navBar')
+        @include('theme-layout.msgs')
+
 
         <!-- / Navbar -->
       

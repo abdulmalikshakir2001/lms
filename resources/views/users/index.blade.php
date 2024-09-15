@@ -11,6 +11,7 @@
         <!-- Navbar -->
         
         @include('theme-layout.navBar')
+        @include('theme-layout.msgs')
 
         <!-- / Navbar -->
 
@@ -24,54 +25,37 @@
                     <div class="col-md-6">
                         <h5>Users</h5>
                     </div>
-                    <div class="col-md-2 offset-4" >
+                    <div class="col-md-3 offset-3 d-flex" >
                         <a href="{{route('users.create')}}" class="btn btn-primary">Add User</a>
+                        <button id="bulk-delete" class="btn btn-danger mx-2" disabled><i class="bx bx-trash me-1"></i></button>
                     </div>
+
                     
                 </div>
                 
-                <div class="table-responsive text-nowrap">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th class="col-md-1">Sr No:</th>
-                        <th class="col-md-2">User</th>
-                        <th class="col-md-2">Email</th>
-                        <th class="col-md-3">Role</th>
-                        <th class="col-md-2">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                        @if ($users->isNotEmpty())
-                        @php
-                            $i = 1;
-                        @endphp
-                          @foreach ($users as $user)
+                <div class="table-responsive text-nowrap p-5 m-0">
+                    <table class="table table-hover datatable" id="datatable">
+                        <thead>
                             <tr>
-                                <td>{{$i}}</td>                      
-                                <td>{{$user->name}}</td>                      
-                                <td>{{$user->email}}</td>                      
-                                <td>{{ $user->roles->pluck('name')->implode(', ') }}</td>
-                                <td>
-                                    <form action="{{route('users.destroy',$user->id)}}" method="post" class="d-inline">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are You sure you want to delete this user?')">
-                                            Delete
-                                        </button>
-                                    </form>
-                                    <a href="{{route('users.edit',$user->id)}}" class="btn btn-primary btn-sm">Edit</a>
-                                </td>
+                                <th class="col-md-1 py-4"><input type="checkbox" class="form-check-input" id="select-all"></th> <!-- For select all -->
+                                <th class="col-md-1 py-4">Sr No:</th>
+                                <th class="col-md-2 py-4">User</th>
+                                <th class="col-md-2 py-4">Email</th>
+                                <th class="col-md-3 py-4">Role</th>
+                                <th class="col-md-2 py-4">Actions</th>
                             </tr>
-                            @php
-                                $i++;
-                            @endphp
-                          @endforeach
-                        @endif
-                                             
-                    </tbody>
-                  </table>
-                </div>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be populated via DataTables AJAX -->
+                        </tbody>
+                    </table>
+                    
+                    <!-- Bulk delete button -->
+                    
+                    
+                    
+              </div>
+              
               </div>
           </div>
           <!-- / Content -->
@@ -93,33 +77,139 @@
 
   </div>
 
+   @include('theme-layout.confirmDeleteModals')
+
+   <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterTitle">Confirm Deletion</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the selected users?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-danger mx-3" id="confirmDelete">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
  
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <script>
-    $(document).on('click', '.edit-role', function (e) {
-    e.preventDefault();
 
-    var roleId = $(this).data('id');
 
-    $.ajax({
-        url: '/roles/' + roleId + '/edit',
-        type: 'GET',
-        success: function (response) {
-            // Populate the modal with the response data
-            $('#editRoleForm').attr('action', '/roles/' + roleId);
-            $('#editRoleForm .modal-body').html(response);
 
-            // Show the modal
-            $('#editModal').modal('show');
+<script>
+
+$(document).on('click', '.delete-button', function() {
+    var userId = $(this).data('id');
+    var formAction = '{{ route("users.destroy", ":id") }}'; // Placeholder route
+    formAction = formAction.replace(':id', userId); // Replace the placeholder with the actual ID
+    $('#deleteForm').attr('action', formAction); // Set the form action URL dynamically
+});
+
+$(document).ready(function () {
+    let table = $("#datatable").DataTable({
+        processing: true,
+        serverSide: true,
+        order: [[1, "desc"]],  // Adjust index because of the new checkbox column
+        ajax: "{{ url('users-data') }}", // Fetching users data via AJAX
+        columns: [
+            { 
+                data: 'id', 
+                name: 'checkbox', 
+                orderable: false, 
+                searchable: false, 
+                render: function (data, type, full, meta) {
+                    return '<input type="checkbox" class="form-check-input user-checkbox" value="' + data + '">';
+                }
+            }, // Checkbox column
+            { data: "id", name: "id" },  // Sr No
+            { data: "name", name: "name" },  // User
+            { data: "email", name: "email" },  // Email
+            { data: "roles", name: "roles" },  // Role
+            { 
+                data: "action", 
+                name: "action", 
+                orderable: false, 
+                searchable: false 
+            }  // Actions
+        ],
+        pagingType: "full_numbers",
+        language: {
+            lengthMenu: "Show _MENU_ records per page"
         },
-        error: function (xhr) {
-            console.error(xhr.responseText);
+        responsive: true,
+        autoWidth: false
+    });
+
+    // Handle Select All checkbox
+    $('#select-all').on('click', function() {
+        let rows = table.rows({ 'search': 'applied' }).nodes();
+        $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        toggleDeleteButton(); // Enable/Disable bulk delete button
+    });
+
+    // Handle single row checkbox change
+    $('#datatable tbody').on('change', '.user-checkbox', function() {
+        if (!this.checked) {
+            $('#select-all').prop('checked', false);
+        }
+        toggleDeleteButton(); // Enable/Disable bulk delete button
+    });
+
+    // Function to enable/disable bulk delete button
+    function toggleDeleteButton() {
+        let anyChecked = $('.user-checkbox:checked').length > 0;
+        $('#bulk-delete').prop('disabled', !anyChecked);
+    }
+
+    // Handle bulk delete button click
+    $('#bulk-delete').on('click', function () {
+        let selectedIds = [];
+        $('.user-checkbox:checked').each(function () {
+            selectedIds.push($(this).val());
+        });
+
+        if (selectedIds.length > 0) {
+            $('#modalCenter').modal('show');  // Show modal instead of alert
+
+            // Handle the "OK" button click inside the modal
+            $('#confirmDelete').off('click').on('click', function () {
+                $.ajax({
+                    url: '{{ route("users.bulkDelete") }}',  // Route for bulk delete
+                    type: 'POST',
+                    data: {
+                        ids: selectedIds,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        table.ajax.reload();  // Reload table after delete
+                        $('#bulk-delete').prop('disabled', true);
+                        $('#modalCenter').modal('hide');  // Hide modal after success
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Something went wrong.');
+                    }
+                });
+            });
         }
     });
 });
+
 
   </script>
 @endsection

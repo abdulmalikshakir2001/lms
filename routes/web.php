@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
     Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::get('/roles-data', [RoleController::class, 'getData'])->name('roles.getData');
     
     // Permissions
     Route::get('/permissions/create', [PermissionsController::class, 'create'])->name('permissions.create');
@@ -38,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/permissions/{id}/edit', [PermissionsController::class, 'edit'])->name('permissions.edit');
     Route::put('/permissions', [PermissionsController::class, 'update'])->name('permissions.update');
     Route::delete('/permissions/{id}', [PermissionsController::class, 'destroy'])->name('permissions.destroy');
+    Route::get('/permissions-data', [PermissionsController::class, 'getData'])->name('permissions.getData');
 
     // Users
     Route::get('users',[UserController::class, 'index'])->name('users.index');
@@ -46,6 +48,10 @@ Route::middleware('auth')->group(function () {
     Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::get('users-data', [UserController::class, 'getUsersData'])->name('users.data');
+    Route::post('users/bulk-delete', [UserController::class, 'bulkDelete'])->name('users.bulkDelete');
+
+
 
 });
 
