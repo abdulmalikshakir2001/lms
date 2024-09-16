@@ -220,7 +220,7 @@ $(document).ready(function () {
                                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                                 </div>
                                 <div class="toast-body">
-                                    Operation Completed Successfully
+                                    Users Deleted Successfully
                                 </div>
                             </div>
                         `;

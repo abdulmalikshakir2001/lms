@@ -136,7 +136,7 @@ class RoleController extends Controller
             return datatables()->of($roles)
             ->addColumn('permissions', function ($row) {
                 return $row->permissions->map(function ($permission) {
-                    return '<span class="badge bg-label-success">' . $permission->name . '</span>';
+                    return '<span class="badge bg-label-success my-1">' . $permission->name . '</span>';
                 })->implode(' ');
             })
             ->addColumn('action', function ($row) {
