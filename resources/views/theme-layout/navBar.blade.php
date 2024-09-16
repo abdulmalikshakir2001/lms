@@ -50,7 +50,7 @@
                             </h6>
                             <small class="text-muted">
                               
-                                {{ auth()->user()->roles->pluck('name')->implode(', ') }} <!-- Display roles -->
+                                {{-- {{ auth()->user()->roles->pluck('name')->implode(', ') }} <!-- Display roles --> --}}
                             </small>
                         </div>
                         </div>
