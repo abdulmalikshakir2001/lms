@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.9.2/semantic.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.semanticui.css">
 
+
   <!-- Helpers -->
   <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
   <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
@@ -33,6 +34,9 @@
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
   <link rel="stylesheet" href="{{ asset('assets/css/customCss.css') }}" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   {{-- <style>
 
     /* Custom DataTable Styles */

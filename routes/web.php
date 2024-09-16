@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
     Route::get('/roles-data', [RoleController::class, 'getData'])->name('roles.getData');
+    Route::post('roles/bulk-delete', [RoleController::class, 'bulkDelete'])->name('roles.bulkDelete');
     
     // Permissions
     Route::get('/permissions/create', [PermissionsController::class, 'create'])->name('permissions.create');

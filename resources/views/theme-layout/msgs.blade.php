@@ -8,7 +8,6 @@
         <div class="toast-header">
             <i class="bx bx-bell me-2"></i>
             <div class="me-auto fw-medium">Error</div>
-            <small>Just now</small>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
@@ -25,7 +24,6 @@
         <div class="toast-header">
             <i class="bx bx-bell me-2"></i>
             <div class="me-auto fw-medium">Success</div>
-            <small>Just now</small>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">

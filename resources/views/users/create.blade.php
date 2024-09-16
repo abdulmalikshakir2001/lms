@@ -1,4 +1,6 @@
 @extends('theme-layout.layout')
+@extends('theme-layout.page-title')
+@section('title', 'Users | Create')
 @section('content')
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">

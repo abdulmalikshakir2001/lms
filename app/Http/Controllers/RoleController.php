@@ -12,20 +12,19 @@ use Illuminate\Routing\Controllers\Middleware;
 class RoleController extends Controller
 {
     
-//     public static function middleware(): array
-//     {
-//       return [
-//         new Middleware('permission:view roles', only:['index']),
-//         new Middleware('permission:edit roles', only:['edit']),
-//         new Middleware('permission:add roles', only:['create']),
-//         new Middleware('permission:delete roles', only:['destroy'])
-//     ];
-// }
+    public function __construct()
+    {
+        $this->middleware('permission:View Roles')->only('index');
+        $this->middleware('permission:Edit Roles')->only('edit');
+        $this->middleware('permission:Add Roles')->only('create');
+        $this->middleware('permission:Delete Roles')->only('destroy');
+    }
 
 
 
 
     public function index() {
+        
       
       $roles = Role::orderBy('id','desc')->get(); 
       $permissions = Permission::orderBy('id','desc')->get();
@@ -33,13 +32,17 @@ class RoleController extends Controller
 
     }
     public function create() {
-      
+        if (!auth()->user()->can('Add Roles')) {
+            return redirect()->route('roles.index')->with('error', 'Permission Denied');
+        }
       $permission = Permission::orderBy('name','desc')->get();
       return view('roles/create',['permissions' => $permission]);
 
     }
     public function store(Request $request) {
-        
+        if (!auth()->user()->can('Add Roles')) {
+            return redirect()->route('roles.index')->with('error', 'Permission Denied');
+        }
         $validator = Validator::make($request->all(),[ 
             'name' => 'required|unique:roles'
         ]);
@@ -61,6 +64,9 @@ class RoleController extends Controller
         }
     }
     public function edit($id) {
+        if (!auth()->user()->can('Edit Roles')) {
+            return redirect()->route('roles.index')->with('error', 'Permission Denied');
+        }
         $editRole = Role::findOrFail($id);
         $hasPermissions = $editRole->permissions->pluck('name');
         $permissions = Permission::all();
@@ -103,6 +109,9 @@ class RoleController extends Controller
     }
     
     public function destroy(Request $request) {
+        if (!auth()->user()->can('Delete Roles')) {
+            return redirect()->route('roles.index')->with('error', 'Permission Denied');
+        }
 
         $id = $request->id;
         $role = Role::find($id);
@@ -131,22 +140,26 @@ class RoleController extends Controller
                 })->implode(' ');
             })
             ->addColumn('action', function ($row) {
-                return '<div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item edit-role" href="#" 
-                                   data-id="' . $row->id . '" 
-                                   data-bs-toggle="modal" 
-                                   data-bs-target="#editModal">
-                                   <i class="bx bx-edit-alt me-1"></i> Edit
-                                </a>
-                                <button type="button" class="dropdown-item delete-role" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                    <i class="bx bx-trash me-1"></i> Delete
-                                </button>
-                            </div>
-                        </div>';
+                if (auth()->user()->can('Edit Roles') && auth()->user()->can('Delete Roles')) {
+                    return '<div class="dropdown">
+                            
+                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item edit-role" href="#" 
+                           data-id="' . $row->id . '" 
+                           data-bs-toggle="modal" 
+                           data-bs-target="#editModal">
+                           <i class="bx bx-edit-alt me-1"></i> Edit
+                        </a>
+                        <button type="button" class="dropdown-item delete-role" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="bx bx-trash me-1"></i> Delete
+                        </button>
+                    </div>
+                </div>';
+                }
+                
             })
             ->rawColumns(['permissions', 'action'])
             ->make(true);
@@ -154,6 +167,17 @@ class RoleController extends Controller
         
         }
     }
+
+    public function bulkDelete(Request $request)
+{
+    $ids = $request->input('ids'); // Array of selected role IDs
+    if (!empty($ids)) {
+        Role::whereIn('id', $ids)->delete();  // Delete roles with the selected IDs
+    }
+    
+    return response()->json(['success' => 'Roles deleted successfully!']);
+}
+
     
     
 

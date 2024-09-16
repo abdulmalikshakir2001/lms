@@ -1,4 +1,6 @@
 @extends('theme-layout.layout')
+@extends('theme-layout.page-title')
+@section('title', 'LMS | Dashboard')
 @section('content')
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">

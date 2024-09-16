@@ -1,4 +1,6 @@
 @extends('theme-layout.layout')
+@extends('theme-layout.page-title')
+@section('title', 'LMS | Permissions')
 @section('content')
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">

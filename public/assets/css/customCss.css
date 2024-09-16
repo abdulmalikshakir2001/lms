@@ -23,3 +23,10 @@ body > div > div > div.layout-container > div{
     color: white !important;
     border: none !important;
 }
+
+.custom-toast {
+    z-index: 1056;
+    position: fixed; 
+    top: 20px;
+    right: 20px; 
+}

@@ -1,4 +1,6 @@
 @extends('theme-layout.layout')
+@extends('theme-layout.page-title')
+@section('title', 'LMS | Users')
 @section('content')
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -26,8 +28,12 @@
                         <h5>Users</h5>
                     </div>
                     <div class="col-md-3 offset-3 d-flex" >
+                        @can('Add Users')
                         <a href="{{route('users.create')}}" class="btn btn-primary">Add User</a>
+                        @endcan
+                        @can('Delete Users')
                         <button id="bulk-delete" class="btn btn-danger mx-2" disabled><i class="bx bx-trash me-1"></i></button>
+                        @endcan
                     </div>
 
                     
@@ -37,7 +43,7 @@
                     <table class="table table-hover datatable" id="datatable">
                         <thead>
                             <tr>
-                                <th class="col-md-1 py-4"><input type="checkbox" class="form-check-input" id="select-all"></th> <!-- For select all -->
+                                <th class="col-md-1 py-4"><input type="checkbox" class="form-check-input" id="select-all"></th>
                                 <th class="col-md-1 py-4">Sr No:</th>
                                 <th class="col-md-2 py-4">User</th>
                                 <th class="col-md-2 py-4">Email</th>
@@ -113,6 +119,8 @@
 
 
 <script>
+
+
 
 $(document).on('click', '.delete-button', function() {
     var userId = $(this).data('id');
@@ -197,10 +205,32 @@ $(document).ready(function () {
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        table.ajax.reload();  // Reload table after delete
-                        $('#bulk-delete').prop('disabled', true);
-                        $('#modalCenter').modal('hide');  // Hide modal after success
-                    },
+                        // Reload the DataTable after deletion
+                        table.ajax.reload();  
+                        $('#bulk-delete').prop('disabled', true);  // Disable the bulk delete button
+                        $('#select-all').prop('checked', false);   // Uncheck the "select all" checkbox
+                        $('#modalCenter').modal('hide');  // Hide the modal after success
+
+                        // Create and append the toast dynamically
+                        let toastHTML = `
+                            <div class="bs-toast toast fade show bg-success custom-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000" style="z-index: 10000; position: fixed; top: 20px; right: 20px;">
+                                <div class="toast-header">
+                                    <i class="bx bx-bell me-2"></i>
+                                    <div class="me-auto fw-medium">Success</div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                                <div class="toast-body">
+                                    Operation Completed Successfully
+                                </div>
+                            </div>
+                        `;
+
+                        // Append the toast to the body (or another appropriate container)
+                        $('body').append(toastHTML);
+
+                        // Show the toast using Bootstrap's toast method
+                        $('.toast').toast('show');
+                        },
                     error: function(xhr, status, error) {
                         alert('Something went wrong.');
                     }

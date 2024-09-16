@@ -68,27 +68,34 @@
             <div class="text-truncate" data-i18n="Dashboards">Dashboard</div>
         </a>
       </li> 
+      
       <li class="menu-item {{ Route::is('users.index')  || Route::is('roles.index') || Route::is('permissions.index') ? 'open' : '' }}">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons bx bx-home-smile"></i>
           <div class="text-truncate" data-i18n="Dashboards">User Management</div>
         </a>
         <ul class="menu-sub">
+          @can('View Users')
           <li class="menu-item {{ Route::is('users.index') ? 'active' : '' }}">
             <a href="{{ route('users.index') }}" class="menu-link">
               <div class="text-truncate" data-i18n="Analytics">Users</div>
             </a>
           </li>
+          @endcan
+          @can('View Roles')
           <li class="menu-item {{ Route::is('roles.index') ? 'active' : '' }}">
             <a href="{{ route('roles.index') }}" class="menu-link">
               <div class="text-truncate" data-i18n="Analytics">Roles</div>
             </a>
           </li>
+          @endcan
+          
           <li class="menu-item {{ Route::is('permissions.index') ? 'active' : '' }}">
             <a href="{{ route('permissions.index') }}" class="menu-link">
               <div class="text-truncate" data-i18n="Analytics">Permissions</div>
             </a>
           </li>
+         
           
           
         </ul>
