@@ -48,6 +48,19 @@ CONFIRM IMPLEMENTATION:
     8)Folder structure for session:
         regions  > user1_reg1 > p1_s1 > deliverables
     --------------------------------------------------------->
+    use session_id to get programm_id from sessions table .
+    --> schools (table)
+        id , name , location , contact , region_id(from user info) , createdAt , updatedAt.
+    --> parents (table)
+        id , father_name , mother_name , region_id(from user info),programm_id(default = NULL) , session_id(default = NULL) , createdAt , updatedAt.
+    --> students (table)
+        id , name , parent_id, school_id ,programm_id , session_id, region_id , createdAt , updatedAt.
+    --> teachers (table)
+        id , name , contact  ,programm_id , session_id, region_id , createdAt , updatedAt.
+    --> facilitators (table)
+        id , name , contact  ,programm_id , session_id, region_id , createdAt , updatedAt.
+
+
 
     
 
