@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Regions;
 use App\Models\User;
 use Hash;
 use Illuminate\Http\Request;
@@ -34,8 +35,9 @@ class UserController extends Controller{
      */
     public function create()
     {
+        $regions = Regions::orderBy('id','desc')->get();
         $roles = Role::orderBy('id','desc')->get();
-        return view('users.create',compact('roles'));
+        return view('users.create',compact('roles','regions'));
     }
 
     /**
@@ -48,7 +50,6 @@ class UserController extends Controller{
             'email' => 'required|unique:users,email',
             'password' => 'required|min:5|same:confirm_password',
             'confirm_password' => 'required|min:5'
-
         ]);
 
         if ($validator->passes()) {
@@ -58,6 +59,10 @@ class UserController extends Controller{
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
+            $user->user_type = $request->user_type;
+            if (!empty($request->region)) {
+                $user->region_id = $request->region;
+            }
             $user->save();  
             if (!empty($request->roles)) {
                 $user->syncRoles($request->roles);
@@ -88,7 +93,8 @@ class UserController extends Controller{
         $user = User::findOrFail($id);
         $roles = Role::orderBy('id','desc')->get();
         $hasRoles = $user->roles->pluck('id');
-        return view('users.edit',compact('user','roles','hasRoles'));
+        $regions = Regions::orderBy('id','desc')->get();
+        return view('users.edit',compact('user','roles','hasRoles','regions'));
     }
 
     /**
@@ -107,6 +113,13 @@ class UserController extends Controller{
             // $role = Role::create(['name'=>$request->name]);
             $user->name = $request->name;
             $user->email = $request->email;
+            $user->user_type  = $request->user_type;
+            if ($request->user_type == 'intra trainer') {
+                $user->region_id  = $request->region;
+            }else{
+                $user->region_id  = null;
+            }
+
             if ($request->password != null) {
                 $user->password = $request->password;
             }

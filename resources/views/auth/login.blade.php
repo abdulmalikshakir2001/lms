@@ -1,4 +1,6 @@
 @extends('theme-layout.layout')
+@extends('theme-layout.page-title')
+@section('title', 'LMS | Login')
 @section('content')
         <!-- Content -->
         <div class="container mt-10">

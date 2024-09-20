@@ -68,10 +68,52 @@
             <div class="text-truncate" data-i18n="Dashboards">Dashboard</div>
         </a>
       </li> 
+      <li class="menu-item {{ Route::is('sessions.index') ? 'active' : '' }}">
+        <a href="{{ route('sessions.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <div class="text-truncate" data-i18n="Dashboards">Sessions</div>
+        </a>
+      </li> 
+      <li class="menu-item {{ Route::is('session_deliverables.index') ? 'active' : '' }}">
+        <a href="{{ route('session_deliverables.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <div class="text-truncate" data-i18n="Dashboards">Session Deliverables</div>
+        </a>
+      </li> 
+      <li class="menu-item {{ Route::is('schools.index') ? 'active' : '' }}">
+        <a href="{{ route('schools.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <div class="text-truncate" data-i18n="Dashboards">Schools</div>
+        </a>
+      </li> 
+      <li class="menu-item {{ Route::is('parents.index') ? 'active' : '' }}">
+        <a href="{{ route('parents.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <div class="text-truncate" data-i18n="Dashboards">Parents</div>
+        </a>
+      </li> 
+      <li class="menu-item {{ Route::is('students.index') ? 'active' : '' }}">
+        <a href="{{ route('students.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <div class="text-truncate" data-i18n="Dashboards">Students</div>
+        </a>
+      </li> 
+      <li class="menu-item {{ Route::is('teachers.index') ? 'active' : '' }}">
+        <a href="{{ route('teachers.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <div class="text-truncate" data-i18n="Dashboards">Teachers</div>
+        </a>
+      </li> 
+      <li class="menu-item {{ Route::is('facilitators.index') ? 'active' : '' }}">
+        <a href="{{ route('facilitators.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <div class="text-truncate" data-i18n="Dashboards">Facilitators</div>
+        </a>
+      </li> 
       
       <li class="menu-item {{ Route::is('users.index')  || Route::is('roles.index') || Route::is('permissions.index') ? 'open' : '' }}">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons bx bx-home-smile"></i>
+          <i class="bx bx-sm bx-user me-1_5"></i>
           <div class="text-truncate" data-i18n="Dashboards">User Management</div>
         </a>
         <ul class="menu-sub">

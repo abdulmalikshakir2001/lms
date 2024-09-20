@@ -30,3 +30,15 @@ body > div > div > div.layout-container > div{
     top: 20px;
     right: 20px; 
 }
+body > span > span > span.select2-search.select2-search--dropdown > input{
+    line-height: 1.7;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    border: 0px solid;
+    
+}
+body > span > span > span.select2-search.select2-search--dropdown > input:focus{
+    border: none;
+    
+}

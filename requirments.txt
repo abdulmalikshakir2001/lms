@@ -28,14 +28,14 @@ IMPLEMENTATION:
     4)programms 
         id , name , description  , createdAt , updatedAt (two programms will be added by seeding (child online protection , facilitator))
 CONFIRM IMPLEMENTATION:
-    1)  add enum  "user_type" field with three values (user, local trainer , intra trainer)  to users_table  default value is user.
-    2) add "region_id" field  to users_table by default value will NULL
-    2) add regions table (add 7 regions name by seeding (KPk,punjab , sindh , balochistan , ajk , gilgit baltistan , islamabad ))
+   1)  add enum  "user_type" field with three values (user, local trainer , intra trainer)  to users_table  default value is user. (Done)
+    2)  add "region_id" field  to users_table by default value will NULL (Done)
+    2)  add regions table (add 7 regions name by seeding (KPk,punjab , sindh , balochistan , ajk , gilgit baltistan , islamabad ))
         regions (table)
-            id , name , createdAt ,  updatedAt
-    3) on front end  in "adding user from" dropdown to select user_type if user_type == trainer   show    the dropdown of regions. 
+            id , name , createdAt ,  updatedAt (Done)
+    3) on front end  in "adding user from" dropdown to select user_type if user_type == intra trainer   show   the dropdown of regions. (Done)
     4)programms (table)
-        id , name , description  , createdAt , updatedAt (two programms will be added by seeding (child online protection , facilitator))
+        id , name , description  , createdAt , updatedAt (two programms will be added by seeding (child online protection , facilitator)) (Done)
     5)session_for(table);
         id,name,createdAt,updatedAt  (studends, edupartners (teachers & parents),trainer)
     NOW LOCAL OR INTRA TRAINER WILL BE SIGNED IN : 
@@ -46,7 +46,7 @@ CONFIRM IMPLEMENTATION:
     7) session_deliverables table:
         id,path,session_id(foreign key),createdAt updatedAt
     8)Folder structure for session:
-        regions  > user1_reg1 > p1_s1 > deliverables
+        regions  > user_1_region_1 > program_1_session_1 > deliverables
     --------------------------------------------------------->
 
     

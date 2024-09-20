@@ -1,9 +1,17 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\FacilitatorsController;
+use App\Http\Controllers\ParentsController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SchoolsController;
+use App\Http\Controllers\SessionDeliverablesController;
+use App\Http\Controllers\SessionsController;
+use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\UserController;
+use App\Models\Facilitators;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,7 +61,75 @@ Route::middleware('auth')->group(function () {
     Route::post('users/bulk-delete', [UserController::class, 'bulkDelete'])->name('users.bulkDelete');
 
 
+    // Sessions
+    Route::get('sessions',[SessionsController::class, 'index'])->name('sessions.index');
+    Route::get('sessions/create',[SessionsController::class, 'create'])->name('sessions.create');
+    Route::get('sessions/details',[SessionsController::class, 'details'])->name('sessions.details');
+    Route::post('sessions/store',[SessionsController::class, 'store'])->name('sessions.store');
+    Route::get('sessions/{id}/edit', [SessionsController::class, 'edit'])->name(name: 'sessions.edit');
+    Route::put('sessions/{id}', [SessionsController::class, 'update'])->name('sessions.update');
+    Route::delete('sessions/{id}', [SessionsController::class, 'destroy'])->name('sessions.destroy');
+    Route::get('sessions-data', [SessionsController::class, 'getSessionsData'])->name('sessions.data');
+    Route::post('sessions/bulk-delete', [SessionsController::class, 'bulkDelete'])->name('sessions.bulkDelete');
 
+    // Session deliverables
+    Route::get('session_deliverables',[SessionDeliverablesController::class, 'index'])->name('session_deliverables.index');
+    Route::get('session_deliverables-data', [SessionDeliverablesController::class, 'getDeliverablesData'])->name('session_deliverables.data');
+    Route::get('add_deliverables/{session_id}', [SessionDeliverablesController::class, 'create'])->name('sessions.add_deliverables');
+    Route::post('session_deliverables/store',[SessionDeliverablesController::class, 'storeSessionDeliverables'])->name('session_deliverables.store');
+
+
+    //    Schools
+    Route::get('/schools', [SchoolsController::class, 'index'])->name('schools.index');
+    Route::get('/schools/create', [SchoolsController::class, 'create'])->name('schools.create');
+    Route::post('/schools', [SchoolsController::class, 'store'])->name('schools.store');
+    Route::get('/schools/{id}/edit', [SchoolsController::class, 'edit'])->name('schools.edit');
+    Route::put('/schools/{id}', [SchoolsController::class, 'update'])->name('schools.update');
+    Route::delete('/schools/{id}', [SchoolsController::class, 'destroy'])->name('schools.destroy');
+    Route::get('/schools-data', [SchoolsController::class, 'getData'])->name('schools.getData');
+    Route::post('schools/bulk-delete', [SchoolsController::class, 'bulkDelete'])->name('schools.bulkDelete');
+
+
+
+     //    Parents
+     Route::get('/parents', [ParentsController::class, 'index'])->name('parents.index');
+     Route::get('/parents/create', [ParentsController::class, 'create'])->name('parents.create');
+     Route::post('/parents', [ParentsController::class, 'store'])->name('parents.store');
+     Route::get('/parents/{id}/edit', [ParentsController::class, 'edit'])->name('parents.edit');
+     Route::put('/parents/{id}', [ParentsController::class, 'update'])->name('parents.update');
+     Route::delete('/parents/{id}', [ParentsController::class, 'destroy'])->name('parents.destroy');
+     Route::get('/parents-data', [ParentsController::class, 'getData'])->name('parents.getData');
+     Route::post('parents/bulk-delete', [ParentsController::class, 'bulkDelete'])->name('parents.bulkDelete');
+ 
+    //    Parents
+    Route::get('/students', [StudentsController::class, 'index'])->name('students.index');
+    Route::get('/students/create', [StudentsController::class, 'create'])->name('students.create');
+    Route::post('/students', [StudentsController::class, 'store'])->name('students.store');
+    Route::get('/students/{id}/edit', [StudentsController::class, 'edit'])->name('students.edit');
+    Route::put('/students/{id}', [StudentsController::class, 'update'])->name('students.update');
+    Route::delete('/students/{id}', [StudentsController::class, 'destroy'])->name('students.destroy');
+    Route::get('/students-data', [StudentsController::class, 'getData'])->name('students.getData');
+    Route::post('students/bulk-delete', [StudentsController::class, 'bulkDelete'])->name('students.bulkDelete');
+
+     //    Teachers
+     Route::get('/teachers', [TeachersController::class, 'index'])->name('teachers.index');
+     Route::get('/teachers/create', [TeachersController::class, 'create'])->name('teachers.create');
+     Route::post('/teachers', [TeachersController::class, 'store'])->name('teachers.store');
+     Route::get('/teachers/{id}/edit', [TeachersController::class, 'edit'])->name('teachers.edit');
+     Route::put('/teachers/{id}', [TeachersController::class, 'update'])->name('teachers.update');
+     Route::delete('/teachers/{id}', [TeachersController::class, 'destroy'])->name('teachers.destroy');
+     Route::get('/teachers-data', [TeachersController::class, 'getData'])->name('teachers.getData');
+     Route::post('teachers/bulk-delete', [TeachersController::class, 'bulkDelete'])->name('teachers.bulkDelete');
+    
+     //    Teachers
+     Route::get('/facilitators', [FacilitatorsController::class, 'index'])->name('facilitators.index');
+     Route::get('/facilitators/create', [FacilitatorsController::class, 'create'])->name('facilitators.create');
+     Route::post('/facilitators', [FacilitatorsController::class, 'store'])->name('facilitators.store');
+     Route::get('/facilitators/{id}/edit', [FacilitatorsController::class, 'edit'])->name('facilitators.edit');
+     Route::put('/facilitators/{id}', [FacilitatorsController::class, 'update'])->name('facilitators.update');
+     Route::delete('/facilitators/{id}', [FacilitatorsController::class, 'destroy'])->name('facilitators.destroy');
+     Route::get('/facilitators-data', [FacilitatorsController::class, 'getData'])->name('facilitators.getData');
+     Route::post('facilitators/bulk-delete', [FacilitatorsController::class, 'bulkDelete'])->name('facilitators.bulkDelete');
 });
 
 

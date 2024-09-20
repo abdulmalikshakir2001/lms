@@ -46,7 +46,6 @@
         <div class="toast-header">
             <i class="bx bx-bell me-2"></i>
             <div class="me-auto fw-medium">Error</div>
-            <small>Just now</small>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
@@ -59,17 +58,11 @@
 
 <style>
     .custom-toast {
-        z-index: 1056; /* You can increase this value if needed */
-        position: fixed; /* Ensure it's positioned above other elements */
-        top: 20px; /* Adjust position as needed */
-        right: 20px; /* Adjust position as needed */
+        z-index: 1056;
+        position: fixed; 
+        top: 20px;
+        right: 20px; 
     }
 </style>
 
-@if ($errors->any())
-    <script>
-        $(document).ready(function() {
-            toastr.error('Please check the form for errors.');
-        });
-    </script>
-@endif
+

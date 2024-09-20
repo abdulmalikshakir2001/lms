@@ -25,18 +25,26 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.9.2/semantic.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.semanticui.css">
 
-
+<link rel="stylesheet" href="{{ asset('select2/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
   <!-- Helpers -->
   <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
   <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
   <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
   <script src="{{ asset('js/config.js') }}"></script>
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
   <link rel="stylesheet" href="{{ asset('assets/css/customCss.css') }}" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+<!-- jQuery -->
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
   {{-- <style>
 
     /* Custom DataTable Styles */

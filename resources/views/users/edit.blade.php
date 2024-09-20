@@ -29,7 +29,7 @@
                 <div class="col-xxl">
                   <div class="card mb-6">
                     <div class="card-header d-flex align-items-center justify-content-between">
-                      <h5 class="mb-0">Add User</h5>
+                      <h5 class="mb-0">Edit User</h5>
                       <a href="{{route('users.index')}}" class="btn btn-primary">Back</a>
                     </div>
                     <div class="card-body">
@@ -109,6 +109,61 @@
                             </div>
                           </div>
                         </div>
+                        <div class="row">
+                          <label
+                              for="exampleFormControlSelect1"
+                              class="col-sm-2 col-form-label"
+                              >User Type</label
+                          >
+                          <div class="col-sm-10 mb-4">
+                              <select class="form-select" name="user_type" id="user_type" aria-label="Default select example" required>
+                                  <option selected>Select User Type</option>
+                                  <option value="user"
+                                   @php
+                                      if($user->user_type == 'user'){
+                                         echo "selected";
+                                      }
+                                  @endphp
+                                  >User</option>
+                                  <option value="intra trainer" 
+                                  @php
+                                      if($user->user_type == 'intra trainer'){
+                                         echo "selected";
+                                      }
+                                  @endphp
+                                  >Intra Trainer</option>
+                                  <option value="local trainer"
+                                  @php
+                                      if($user->user_type == 'local trainer'){
+                                         echo "selected";
+                                      }
+                                  @endphp
+                                  >Local Trainer</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="row" id="region_div"
+                      @if ($user->user_type == 'intra trainer')
+                          
+                      @else
+                          style="display: none;"
+                      @endif
+                        >
+                          <label for="exampleFormControlSelect2" class="col-sm-2 col-form-label">Regions</label>
+                          <div class="col-sm-10 mb-4">
+                              <select class="form-select" name="region" id="exampleFormControlSelect2" aria-label="Default select example">
+                                  <option selected>Select Region</option>
+                                  @if ($regions->isNotEmpty())
+                                      @foreach ($regions as $region)
+                                         @if ($user->region_id == $region->id)
+                                          <option value="{{ $region->id }}" selected>{{ $region->name }}</option>
+                                         @endif
+                                          <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                      @endforeach
+                                  @endif
+                              </select>
+                          </div>
+                      </div>  
                         <div class="row mb-6">
                             <label class="col-sm-2 col-form-label" for="password">Roles</label>
                             @if ($roles->isNotEmpty())
@@ -162,5 +217,23 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
+    <script>
+      $(document).ready(function () {
+          // Listen for changes in the user type dropdown
+          $('#user_type').on('change', function () {
+              var selectedUserType = $(this).val();
+  
+              // Check if 'Intra Trainer' is selected
+              if (selectedUserType === 'intra trainer') {
+                  // Show the regions dropdown and make it required
+                  $('#region_div').show();
+                  $('#exampleFormControlSelect2').attr('required', true);
+              } else {
+                  // Hide the regions dropdown and remove required attribute
+                  $('#region_div').hide();
+                  $('#exampleFormControlSelect2').removeAttr('required');
+              }
+          });
+      });
+  </script>
 @endsection
