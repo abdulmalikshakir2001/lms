@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FacilitatorsController;
 use App\Http\Controllers\ParentsController;
 use App\Http\Controllers\PermissionsController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\SchoolsController;
 use App\Http\Controllers\SessionDeliverablesController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TeachersController;
 use App\Http\Controllers\UserController;
 use App\Models\Facilitators;
@@ -25,12 +27,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['middleware' => ['role:Super Admin']], function() {
+    Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+    Route::get('/regFacilitator/dashboard/{region_id}', [DashboardController::class, 'superAdminDashboards'])->name('superAdmin.dashboard');
+
+});
+
+Route::group(['middleware' => ['role:Regional Facilitator']], function() {
+    Route::get('/regFacilitator/dashboard', [DashboardController::class, 'regFacilitator'])->name('regFacilitator.dashboard');
+});
+
+Route::group(['middleware' => ['role:Local Facilitator']], function() {
+    Route::get('/locFacilitator/dashboard', [DashboardController::class, 'locFacilitator'])->name('locFacilitator.dashboard');
+});
+
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('html.index');
-    })->name('dashboard');
-
+    
     // Roles
     Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
@@ -64,13 +77,16 @@ Route::middleware('auth')->group(function () {
     // Sessions
     Route::get('sessions',[SessionsController::class, 'index'])->name('sessions.index');
     Route::get('sessions/create',[SessionsController::class, 'create'])->name('sessions.create');
-    Route::get('sessions/details',[SessionsController::class, 'details'])->name('sessions.details');
+    Route::get('sessions/details/{id}',[SessionsController::class, 'details'])->name('sessions.details');
     Route::post('sessions/store',[SessionsController::class, 'store'])->name('sessions.store');
     Route::get('sessions/{id}/edit', [SessionsController::class, 'edit'])->name(name: 'sessions.edit');
     Route::put('sessions/{id}', [SessionsController::class, 'update'])->name('sessions.update');
     Route::delete('sessions/{id}', [SessionsController::class, 'destroy'])->name('sessions.destroy');
     Route::get('sessions-data', [SessionsController::class, 'getSessionsData'])->name('sessions.data');
     Route::post('sessions/bulk-delete', [SessionsController::class, 'bulkDelete'])->name('sessions.bulkDelete');
+    Route::get('sessions/downloadDeliverables/{id}', [SessionsController::class, 'downloadDeliverables'])->name('sessions.downloadDeliverables');
+    Route::get('sessions/downloadSingleDeliverable/{file}', [SessionsController::class, 'downloadSingleDeliverable'])->name('sessions.downloadSingleDeliverable');
+
 
     // Session deliverables
     Route::get('session_deliverables',[SessionDeliverablesController::class, 'index'])->name('session_deliverables.index');
@@ -101,7 +117,7 @@ Route::middleware('auth')->group(function () {
      Route::get('/parents-data', [ParentsController::class, 'getData'])->name('parents.getData');
      Route::post('parents/bulk-delete', [ParentsController::class, 'bulkDelete'])->name('parents.bulkDelete');
  
-    //    Parents
+    //    Students
     Route::get('/students', [StudentsController::class, 'index'])->name('students.index');
     Route::get('/students/create', [StudentsController::class, 'create'])->name('students.create');
     Route::post('/students', [StudentsController::class, 'store'])->name('students.store');
@@ -130,6 +146,35 @@ Route::middleware('auth')->group(function () {
      Route::delete('/facilitators/{id}', [FacilitatorsController::class, 'destroy'])->name('facilitators.destroy');
      Route::get('/facilitators-data', [FacilitatorsController::class, 'getData'])->name('facilitators.getData');
      Route::post('facilitators/bulk-delete', [FacilitatorsController::class, 'bulkDelete'])->name('facilitators.bulkDelete');
+     Route::get('/teacher-chart', [TeachersController::class, 'showChart']);
+
+    
+
+     //For super admin tables
+     Route::get('students_table/{region_Id}',[TablesController::class, 'students_table'])->name('tables.students');
+     Route::get('getStudentsData/{region_Id}',[TablesController::class, 'getStudentsData'])->name('tables.getStudentsData');
+     Route::get('parents_table/{region_Id}',[TablesController::class, 'parents_table'])->name('tables.parents');
+     Route::get('getParentsData/{region_Id}',[TablesController::class, 'getParentsData'])->name('tables.getParentsData');
+     Route::get('teachers_table/{region_Id}',[TablesController::class, 'teachers_table'])->name('tables.teachers');
+     Route::get('getTeachersData/{region_Id}',[TablesController::class, 'getTeachersData'])->name('tables.getTeachersData');
+     Route::get('schools_table/{region_Id}',[TablesController::class, 'schools_table'])->name('tables.schools');
+     Route::get('getSchoolsData/{region_Id}',[TablesController::class, 'getSchoolsData'])->name('tables.getSchoolsData');
+     Route::get('sessions_table/{region_Id}',[TablesController::class, 'sessions_table'])->name('tables.sessions');
+     Route::get('getSessionsData/{region_Id}',[TablesController::class, 'getSessionsData'])->name('tables.getSessionsData');
+  
+    // For Other users
+    Route::get('students_table',[TablesController::class, 'students_table'])->name('tables.students');
+    Route::get('getStudentsData',[TablesController::class, 'getStudentsData'])->name('tables.getStudentsData');
+    Route::get('parents_table',[TablesController::class, 'parents_table'])->name('tables.parents');
+    Route::get('getParentsData',[TablesController::class, 'getParentsData'])->name('tables.getParentsData');
+    Route::get('teachers_table',[TablesController::class, 'teachers_table'])->name('tables.teachers');
+    Route::get('getTeachersData',[TablesController::class, 'getTeachersData'])->name('tables.getTeachersData');
+    Route::get('schools_table',[TablesController::class, 'schools_table'])->name('tables.schools');
+    Route::get('getSchoolsData',[TablesController::class, 'getSchoolsData'])->name('tables.getSchoolsData');
+    Route::get('sessions_table',[TablesController::class, 'sessions_table'])->name('tables.sessions');
+    Route::get('getSessionsData',[TablesController::class, 'getSessionsData'])->name('tables.getSessionsData');
+
+   
 });
 
 

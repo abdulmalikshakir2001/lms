@@ -114,7 +114,7 @@ class UserController extends Controller{
             $user->name = $request->name;
             $user->email = $request->email;
             $user->user_type  = $request->user_type;
-            if ($request->user_type == 'intra trainer') {
+            if ($request->user_type == 'intra trainer' || auth()->user()->hasRole('Regional Facilitator')) {
                 $user->region_id  = $request->region;
             }else{
                 $user->region_id  = null;
@@ -156,41 +156,49 @@ class UserController extends Controller{
     }
 
     public function getUsersData(Request $request)
-{
-    if ($request->ajax()) {
-        $users = User::with('roles')->select(['id', 'name', 'email']); // Adjust as per your database
-
-            return datatables()->of($users)
-        ->addIndexColumn() // Adds automatic row numbering
-        ->addColumn('roles', function ($row) {
-            return $row->roles->map(function ($role) {
-                return '<span class="badge bg-label-primary">' . $role->name . '</span>';
-            })->implode(' ');  // Join the badges with a space in between
-        })
-        ->addColumn('action', function ($row) {
-
-            if (auth()->user()->can('Edit Users') && auth()->user()->can('Delete Users') ) {
-                return '<div class="dropdown">
-                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                    <i class="bx bx-dots-vertical-rounded"></i>
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="'.route('users.edit', $row->id).'">
-                        <i class="bx bx-edit-alt me-1"></i> Edit
-                    </a>
-                    <button type="button" class="dropdown-item delete-button" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                        <i class="bx bx-trash me-1"></i> Delete
-                    </button>
-                </div>
-            </div>';
+    {
+        if ($request->ajax()) {
+            // Check if the user has the 'Regional Facilitator' role
+            if (auth()->user()->hasRole('Regional Facilitator')) {
+                // Fetch users where region_id matches and user_type is 'local_trainer'
+                $users = User::with('roles')
+                    ->where('region_id', auth()->user()->region_id)
+                    ->where('user_type', 'local trainer')
+                    ->select(['id', 'name', 'email']);
+            } else {
+                // Default query for other roles
+                $users = User::with('roles')->select(['id', 'name', 'email']);
             }
-            
-        })
-        ->rawColumns(['roles','action']) // Make the action column raw HTML
-        ->make(true);
-
+    
+            return datatables()->of($users)
+                ->addIndexColumn() // Adds automatic row numbering
+                ->addColumn('roles', function ($row) {
+                    return $row->roles->map(function ($role) {
+                        return '<span class="badge bg-label-primary">' . $role->name . '</span>';
+                    })->implode(' ');  // Join the badges with a space in between
+                })
+                ->addColumn('action', function ($row) {
+                    if (auth()->user()->can('Edit Users') && auth()->user()->can('Delete Users')) {
+                        return '<div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="'.route('users.edit', $row->id).'">
+                                    <i class="bx bx-edit-alt me-1"></i> Edit
+                                </a>
+                                <button type="button" class="dropdown-item delete-button" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    <i class="bx bx-trash me-1"></i> Delete
+                                </button>
+                            </div>
+                        </div>';
+                    }
+                })
+                ->rawColumns(['roles','action']) // Make the action column raw HTML
+                ->make(true);
         }
-}
+    }
+    
 
 
     public function bulkDelete(Request $request)

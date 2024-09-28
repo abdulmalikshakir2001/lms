@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Facilitators extends Model
 {
     use HasFactory;
+
+    public function region()
+    {
+        return $this->belongsTo(Regions::class, 'region_id');
+    }
 }

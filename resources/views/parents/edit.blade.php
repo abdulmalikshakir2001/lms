@@ -93,6 +93,30 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="row mb-6">
+                                            <label
+                                                class="col-sm-2 col-form-label"
+                                                for="basic-icon-default-fullname"
+                                                >Select Session</label
+                                            >
+
+                                           
+                                            <div class="col-sm-10">
+                                                <select class="form-control custom-select2" style="width: 100%;" name="session_id">
+                                                    <option selected="selected">Select Session</option>
+                                                    @if ($sessions->isNotEmpty())
+                                                        @foreach ($sessions as $session)
+                                                            @if ($session->id == $parent->session_id)
+                                                                <option value="{{ $session->id }}" selected>{{ $session->name }}</option>
+                                                            @else
+                                                                <option value="{{ $session->id }}">{{ $session->name }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                </select>                                                
+                                            </div>
+                                        </div>
                                         <div class="row justify-content-end">
                                             <div class="col-sm-10">
                                                 <input type="hidden" name="region_id" value="{{$parent->region_id}}">

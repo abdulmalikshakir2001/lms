@@ -14,5 +14,6 @@ class Schools extends Model
         'location',
         'contact',
         'region_id',
+        'trainer_id'
     ];
 }

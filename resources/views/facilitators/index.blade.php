@@ -1,7 +1,7 @@
 @extends('theme-layout.layout')
 @extends('theme-layout.page-title')
 
-@section('title', 'Students')
+@section('title', 'LMS | Facilitators')
 
 @section('content')
 <div class="layout-wrapper layout-content-navbar">

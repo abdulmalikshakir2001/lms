@@ -90,6 +90,25 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="row mb-6">
+                                            <label
+                                                class="col-sm-2 col-form-label"
+                                                for="basic-icon-default-fullname"
+                                                >Select Session</label
+                                            >
+                                            <div class="col-sm-10">
+                                                <select class="form-control select2" style="width: 100%;" name="session_id">
+                                                    <option selected="selected">Select Session</option>
+                                                    @if ($sessions->isNotEmpty())
+                                                        @foreach ($sessions as $session)
+                                                          <option value="{{ $session->id }}">{{ $session->name }}</option> 
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         <div class="row justify-content-end">
                                             <div class="col-sm-10">
                                                 <input type="hidden" name="region_id" value="{{auth()->user()->region_id}}">
@@ -121,4 +140,12 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+ 
+    $(document).ready(function () {
+      $('.select2').select2();
+    });
+
+</script>
 @endsection

@@ -9,6 +9,10 @@
 <script src="{{ asset('js/ui-toasts.js')}}"></script>
 <script src="{{ asset('datatables.min.js') }}"></script>
 <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('assets/chartist/dist/chartist.min.js') }}"></script>
+
+
+<script src="{{ asset('assets/chart.js/dist/Chart.min.js') }}"></=script>
 
 <!-- Place this tag before closing body tag for github widget button. -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>

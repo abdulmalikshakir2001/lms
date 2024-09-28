@@ -13,6 +13,13 @@ class StudentsController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:View Students')->only('index');
+        $this->middleware('permission:Edit Students')->only('edit');
+        $this->middleware('permission:Add Students')->only('create');
+        $this->middleware('permission:Delete Students')->only('destroy');
+    }
     public function index()
     {
         return view('students.index');
@@ -23,9 +30,15 @@ class StudentsController extends Controller
      */
     public function create()
     {
-        $sessions = Sessions::all();
-        $parents = Parents::all();
-        $schools = Schools::all();
+        $sessions = Sessions::where('region_id',auth()->user()->region_id)
+        ->where('trainer',auth()->user()->id)
+        ->get();
+        $parents = Parents::where('region_id',auth()->user()->region_id)
+        ->where('trainer_id',auth()->user()->id)
+        ->get();
+        $schools = Schools::where('region_id',auth()->user()->region_id)
+        ->where('trainer_id',auth()->user()->id)
+        ->get();
         return view('students.create',compact('sessions','parents','schools'));
 
     }
@@ -52,6 +65,7 @@ class StudentsController extends Controller
         $student->session_id = $request->input('session_id');
         $student->program_id = $session->program_id;
         $student->region_id = auth()->user()->region_id; // Assuming the user is logged in and has a region
+        $student->trainer_id = auth()->user()->id; // Assuming the user is logged in and has a region
         $student->save();
 
         // Redirect to the index page with a success message
@@ -73,11 +87,19 @@ class StudentsController extends Controller
      */
     public function edit(string $id)
     {
-        $student = Students::findOrFail($id);
-        $sessions = Sessions::all();
-        $parents = Parents::all();
-        $schools = Schools::all();
-        return view('students.edit',compact('sessions','parents','student','schools'));
+        if(!auth()->user()->hasRole('Super Admin')){
+            $student = Students::findOrFail($id);
+            $sessions = Sessions::where('region_id',auth()->user()->region_id)->get();
+            $parents = Parents::where('region_id',auth()->user()->region_id)->get();
+            $schools = Schools::where('region_id',auth()->user()->region_id)->get();
+            return view('students.edit',compact('sessions','parents','student','schools'));
+        }else{
+            $student = Students::findOrFail($id);
+            $sessions = Sessions::get();
+            $parents = Parents::get();
+            $schools = Schools::get();
+            return view('students.edit',compact('sessions','parents','student','schools'));
+        }
 
 
     }
@@ -103,11 +125,16 @@ class StudentsController extends Controller
         $student->school_id = $request->input('school_id');
         $student->session_id = $request->input('session_id');
         $student->program_id = $session->program_id;
-        $student->region_id = auth()->user()->region_id; // Assuming the user is logged in and has a region
+        $student->region_id = $request->input('region_id'); // Assuming the user is logged in and has a region
+        $student->trainer_id = auth()->user()->id; // Assuming the user is logged in and has a region
         $student->save();
 
         // Redirect to the index page with a success message
-        return redirect()->route('students.index')->with('success', 'Student added successfully.');
+        if (!auth()->user()->hasRole('Super Admin')) {
+            return redirect()->route('students.index')->with('success', 'Student added successfully.');
+        }else{
+            return redirect()->route('tables.students')->with('success', 'Student added successfully.');
+        }
     }
 
     /**
@@ -122,7 +149,11 @@ class StudentsController extends Controller
             
         }else {
             $students->delete();
-            return redirect()->route('students.index')->with('success','Student deleted successfully');
+            if (auth()->user()->hasRole('Super Admin')) {
+                return redirect()->route('tables.students')->with('success','Student deleted successfully');
+            }else{
+                return redirect()->route('students.index')->with('success','Student deleted successfully');
+            }
 
         }
     }
@@ -130,18 +161,20 @@ class StudentsController extends Controller
     {
         if ($request->ajax()) {
             $students = Students::select([
-                    'students.id',
-                    'students.name',
-                    'parents.father_name',
-                    'regions.name as region_name',
-                    'programs.name as program_name',
-                    'sessions.name as session_name'
-                ])
-                ->leftJoin('parents', 'students.parent_id', '=', 'parents.id')
-                ->leftJoin('regions', 'students.region_id', '=', 'regions.id')
-                ->leftJoin('programs', 'students.program_id', '=', 'programs.id')
-                ->leftJoin('sessions', 'students.session_id', '=', 'sessions.id')
-                ->get();
+                'students.id',
+                'students.name',
+                'parents.father_name',
+                'regions.name as region_name',
+                'programs.name as program_name',
+                'sessions.name as session_name'
+            ])
+            ->leftJoin('parents', 'students.parent_id', '=', 'parents.id')
+            ->leftJoin('regions', 'students.region_id', '=', 'regions.id')
+            ->leftJoin('programs', 'students.program_id', '=', 'programs.id')
+            ->leftJoin('sessions', 'students.session_id', '=', 'sessions.id')
+            ->where('students.region_id', auth()->user()->region_id) // Filter by user's region
+            ->get();
+
     
             return datatables()->of($students)
                 ->addColumn('action', function ($row) {

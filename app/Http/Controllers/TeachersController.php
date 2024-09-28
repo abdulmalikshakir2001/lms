@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Parents;
+use App\Models\Regions;
 use App\Models\Schools;
 use App\Models\Sessions;
 use App\Models\Students;
@@ -16,6 +17,13 @@ class TeachersController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:View Teachers')->only('index');
+        $this->middleware('permission:Edit Teachers')->only('edit');
+        $this->middleware('permission:Add Teachers')->only('create');
+        $this->middleware('permission:Delete Teachers')->only('destroy');
+    }
     public function index()
     {
         return view('teachers.index');
@@ -26,7 +34,9 @@ class TeachersController extends Controller
      */
     public function create()
     {
-        $sessions = Sessions::all();
+        $sessions = Sessions::where('region_id',auth()->user()->region_id)
+        ->where('trainer',auth()->user()->id)
+        ->get();
         return view('teachers.create',compact('sessions'));
 
     }
@@ -35,29 +45,30 @@ class TeachersController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    // Validate the input
-    $request->validate([
-        'name' => 'required|string|max:255',      // Validate teacher's name
-        'contact' => 'required|string|max:255',   // Validate contact information
-        'session_id' => 'required|exists:sessions,id',  // Ensure session ID exists
-    ]);
+    {
+        // Validate the input
+        $request->validate([
+            'name' => 'required|string|max:255',      // Validate teacher's name
+            'contact' => 'required|string|max:255',   // Validate contact information
+            'session_id' => 'required|exists:sessions,id',  // Ensure session ID exists
+        ]);
 
-    // Retrieve the session for additional details like program_id
-    $session = Sessions::find($request->input('session_id'));
+        // Retrieve the session for additional details like program_id
+        $session = Sessions::find($request->input('session_id'));
 
-    // Create a new Teacher instance
-    $teacher = new Teachers();
-    $teacher->name = $request->input('name');          // Set the teacher's name
-    $teacher->contact = $request->input('contact');    // Set the teacher's contact
-    $teacher->session_id = $request->input('session_id'); // Set the session ID
-    $teacher->program_id = $session->program_id;       // Set the program ID based on the session
-    $teacher->region_id = auth()->user()->region_id;   // Set region ID from the logged-in user
-    $teacher->save();  // Save the teacher to the database
+        // Create a new Teacher instance
+        $teacher = new Teachers();
+        $teacher->name = $request->input('name');          // Set the teacher's name
+        $teacher->contact = $request->input('contact');    // Set the teacher's contact
+        $teacher->session_id = $request->input('session_id'); // Set the session ID
+        $teacher->program_id = $session->program_id;       // Set the program ID based on the session
+        $teacher->region_id = auth()->user()->region_id;   // Set region ID from the logged-in user
+        $teacher->trainer_id = auth()->user()->id;   
+        $teacher->save();  // Save the teacher to the database
 
-    // Redirect to the index page with a success message
-    return redirect()->route('teachers.index')->with('success', 'Teacher added successfully.');
-}
+        // Redirect to the index page with a success message
+        return redirect()->route('teachers.index')->with('success', 'Teacher added successfully.');
+    }
 
 
 
@@ -70,14 +81,34 @@ class TeachersController extends Controller
         //
     }
 
+
+    public function showChart()
+    {
+        // Get the count of teachers per region
+        $regions = Regions::withCount('teachers')->get();
+
+        // Prepare data for chart
+        $regionNames = $regions->pluck('name');
+        $teacherCounts = $regions->pluck('teachers_count');
+
+        return view('html.testing', compact('regionNames', 'teacherCounts'));
+    }
+
+
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        $teacher = Teachers::findOrFail($id);
-        $sessions = Sessions::all();
-        return view('teachers.edit',compact('sessions','teacher'));
+        if(auth()->user()->hasRole('Super Admin')){
+            $teacher = Teachers::findOrFail($id);
+            $sessions = Sessions::get();
+            return view('teachers.edit',compact('sessions','teacher'));
+        }else{
+            $teacher = Teachers::findOrFail($id);
+            $sessions = Sessions::where('region_id',auth()->user()->region_id)->get();
+            return view('teachers.edit',compact('sessions','teacher'));
+        }
 
     }
 
@@ -104,11 +135,17 @@ class TeachersController extends Controller
         $teacher->contact = $request->input('contact');    // Update the contact
         $teacher->session_id = $request->input('session_id'); // Update session ID
         $teacher->program_id = $session->program_id;       // Update program ID based on the session
-        $teacher->region_id = auth()->user()->region_id;   // Update the region ID
+        $teacher->region_id = $request->input('region_id');   // Update the region I// Update the region ID
         $teacher->save();  // Save the updated teacher record
 
         // Redirect to the index page with a success message
-        return redirect()->route('teachers.index')->with('success', 'Teacher updated successfully.');
+        if(!auth()->user()->hasRole('Super Admin')){
+            return redirect()->route('teachers.index')->with('success', 'Teacher updated successfully.');
+
+        }else{
+            return redirect()->route('tables.teachers')->with('success', 'Teacher updated successfully.');
+
+        }
     }
 
 
@@ -124,7 +161,13 @@ class TeachersController extends Controller
             
         }else {
             $teachers->delete();
-            return redirect()->route('teachers.index')->with('success','Teacher deleted successfully');
+            if(!auth()->user()->hasRole('Super Admin')){
+                return redirect()->route('teachers.index')->with('success', 'Teacher deleted successfully.');
+    
+            }else{
+                return redirect()->route('tables.teachers')->with('success', 'Teacher deleted successfully.');
+    
+            }
 
         }
     }
@@ -132,17 +175,19 @@ class TeachersController extends Controller
 {
     if ($request->ajax()) {
         $teachers = Teachers::select([
-                'teachers.id',
-                'teachers.name as teacher_name',
-                'teachers.contact',  // Assuming `contact` is a column in the teachers table
-                'regions.name as region_name',
-                'programs.name as program_name',
-                'sessions.name as session_name'
-            ])
-            ->leftJoin('regions', 'teachers.region_id', '=', 'regions.id')
-            ->leftJoin('programs', 'teachers.program_id', '=', 'programs.id')
-            ->leftJoin('sessions', 'teachers.session_id', '=', 'sessions.id')
-            ->get();
+            'teachers.id',
+            'teachers.name as teacher_name',
+            'teachers.contact',  // Assuming `contact` is a column in the teachers table
+            'regions.name as region_name',
+            'programs.name as program_name',
+            'sessions.name as session_name'
+        ])
+        ->leftJoin('regions', 'teachers.region_id', '=', 'regions.id')
+        ->leftJoin('programs', 'teachers.program_id', '=', 'programs.id')
+        ->leftJoin('sessions', 'teachers.session_id', '=', 'sessions.id')
+        ->where('teachers.region_id', auth()->user()->region_id) // Filter by user's region
+        ->get();
+
         
         return datatables()->of($teachers)
             ->addIndexColumn()  // Automatically add row index (for Sr No)

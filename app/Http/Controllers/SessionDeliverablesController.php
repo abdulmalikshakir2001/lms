@@ -11,6 +11,12 @@ class SessionDeliverablesController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function __construct()
+    {
+        $this->middleware('permission:View Session Deliverables')->only('index');
+
+    }
     public function index()
     {
         return view('session_deliverables.index');

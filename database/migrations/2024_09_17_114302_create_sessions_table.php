@@ -21,12 +21,12 @@ return new class extends Migration
             $table->unsignedBigInteger('region_id');
             $table->string('name');
             $table->longText('description')->nullable();
+            $table->string('status')->default('on time');
             $table->date('start_date');
             $table->date('end_date');            
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */

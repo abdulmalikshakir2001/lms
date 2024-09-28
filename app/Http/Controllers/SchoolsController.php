@@ -10,6 +10,14 @@ class SchoolsController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function __construct()
+    {
+        $this->middleware('permission:View Schools')->only('index');
+        $this->middleware('permission:Edit Schools')->only('edit');
+        $this->middleware('permission:Add Schools')->only('create');
+        $this->middleware('permission:Delete Schools')->only('destroy');
+    }
     public function index()
     {
         return view('schools.index');
@@ -29,6 +37,8 @@ class SchoolsController extends Controller
      */
     public function store(Request $request)
     {
+        $trainerId =auth()->user()->id;
+       
         // Validate the incoming request
         $request->validate([
             'name' => 'required|string|max:255',
@@ -43,6 +53,7 @@ class SchoolsController extends Controller
             'location' => $request->input('location'),
             'contact' => $request->input('contact'),
             'region_id' => $request->input('region_id'),
+            'trainer_id' => $trainerId
         ]);
 
         // Redirect to the schools index page with a success message
@@ -85,12 +96,17 @@ class SchoolsController extends Controller
         $school->name = $request->input('name');
         $school->location = $request->input('location');
         $school->contact = $request->input('contact');
+        
     
         // Save the updated data to the database
         $school->save();
     
         // Redirect back with a success message
-        return redirect()->route('schools.index')->with('success', 'School updated successfully.');
+        if (auth()->user()->hasRole('Super Admin')) {
+            return redirect()->route('tables.schools')->with('success', 'School updated successfully.');
+        }else{
+            return redirect()->route('schools.index')->with('success', 'School updated successfully.');
+        }
     }
     
 
@@ -107,7 +123,11 @@ class SchoolsController extends Controller
             
         }else {
             $school->delete();
-            return redirect()->route('schools.index')->with('success','School deleted successfully');
+            if (!auth()->user()->hasRole('Super Admin')) {
+                return redirect()->route('tables.schools')->with('success', 'School deleted successfully.');
+            }else{
+                return redirect()->route('schools.index')->with('success', 'School deleted successfully.');
+            }
 
         }
 
@@ -116,7 +136,7 @@ class SchoolsController extends Controller
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            $schools = Schools::select(['id', 'name', 'location', 'contact'])->get();
+            $schools = Schools::select(['id', 'name', 'location', 'contact'])->where('region_id',auth()->user()->region_id)->get();
     
             return datatables()->of($schools)
                 ->addColumn('action', function ($row) {

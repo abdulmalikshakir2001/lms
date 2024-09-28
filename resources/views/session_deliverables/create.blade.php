@@ -61,7 +61,6 @@
                                                 <input type="hidden" name="session_id" value="{{$session->id}}">
                                             </div>
                                         </div>
-                                        
                                         <div class="row justify-content-end">
                                             <div class="col-sm-10">
                                                 <button

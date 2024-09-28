@@ -36,6 +36,7 @@
                                     <form
                                         action="{{route('sessions.store')}}"
                                         method="POST"
+                                        enctype="multipart/form-data"
                                     >
                                         @csrf
                                         <div class="row mb-6">
@@ -62,36 +63,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <label
-                                                for="exampleFormControlSelect1"
-                                                class="col-sm-2 col-form-label"
-                                                >Trainer</label
-                                            >
-                                            <div class="col-sm-10 mb-4">
-                                                <select class="form-select" name="trainer" aria-label="Default select example" required>
-                                                    <option selected>Select Trainer</option>
-                                                    @if ($trainers->isNotEmpty())
-                                                        @foreach ($trainers as $trainer)
-                                                          <option value="{{$trainer->id}}">{{$trainer->name}}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row" id="region_div">
-                                            <label for="exampleFormControlSelect2" class="col-sm-2 col-form-label">Regions</label>
-                                            <div class="col-sm-10 mb-4">
-                                                <select class="form-select" name="region" id="exampleFormControlSelect2" aria-label="Default select example" required>
-                                                    <option selected>Select Region</option>
-                                                    @if ($regions->isNotEmpty())
-                                                        @foreach ($regions as $region)
-                                                            <option value="{{ $region->id }}">{{ $region->name }}</option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-                                        </div>                                        
+                                        
+                                                                               
                                         <div class="row" id="region_div">
                                             <label for="exampleFormControlSelect2" class="col-sm-2 col-form-label">Programs</label>
                                             <div class="col-sm-10 mb-4">
@@ -179,7 +152,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+                                        <div class="row">
+                                            <label for="formFileMultiple" class="col-form-label col-sm-2">Choose Files</label>
+                                            <div class="mb-4 col-sm-10">
+                                                <input class="form-control" type="file" name="deliverables[]" id="formFileMultiple" multiple>
+                                            </div>
+                                        </div>
+                                        <!-- Preview of selected files -->
+                                        <div class="row mb-5">
+                                            <div class="col-sm-10 offset-sm-2">
+                                                <ul id="file-preview-list" class="list-group">
+                                                    <!-- Selected files will be shown here -->
+                                                </ul>
+                                            </div>
+                                        </div>
                                         <div class="row justify-content-end">
                                             <div class="col-sm-10">
                                                 <button
@@ -190,6 +176,8 @@
                                                 </button>
                                             </div>
                                         </div>
+                                    <input type="hidden" name="trainer" value="{{auth()->user()->id}}">
+                                    <input type="hidden" name="region" value="{{auth()->user()->region_id}}">
                                     </form>
                                 </div>
                             </div>
@@ -210,4 +198,76 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+document.getElementById('formFileMultiple').addEventListener('change', function (event) {
+    const fileList = event.target.files;
+    const filePreviewList = document.getElementById('file-preview-list');
+    
+    // Clear previous preview list
+    filePreviewList.innerHTML = '';
+
+    // Loop through selected files and display them
+    Array.from(fileList).forEach((file, index) => {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+        li.textContent = file.name;
+
+        // Remove button
+        const removeButton = document.createElement('button');
+        removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
+        removeButton.textContent = 'Remove';
+
+        // Prevent form submission on button click and remove file
+        removeButton.addEventListener('click', function (e) {
+            e.preventDefault();  // Prevent form submission
+            removeFile(index);   // Remove the specific file
+        });
+
+        li.appendChild(removeButton);
+        filePreviewList.appendChild(li);
+    });
+});
+
+// Function to remove a file from the input
+function removeFile(removeIndex) {
+    const fileInput = document.getElementById('formFileMultiple');
+    const dataTransfer = new DataTransfer(); // to hold the modified file list
+
+    // Filter the files except the one being removed
+    Array.from(fileInput.files).forEach((file, index) => {
+        if (index !== removeIndex) {
+            dataTransfer.items.add(file); // Add back all files except the removed one
+        }
+    });
+
+    // Update the file input with the new file list
+    fileInput.files = dataTransfer.files;
+
+    // Refresh the file preview list
+    const filePreviewList = document.getElementById('file-preview-list');
+    filePreviewList.innerHTML = ''; // Clear existing preview list
+    Array.from(fileInput.files).forEach((file, index) => {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+        li.textContent = file.name;
+
+        // Remove button
+        const removeButton = document.createElement('button');
+        removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
+        removeButton.textContent = 'Remove';
+
+        // Add click event to remove the file again
+        removeButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            removeFile(index);  // Recursively call remove function for the updated index
+        });
+
+        li.appendChild(removeButton);
+        filePreviewList.appendChild(li);
+    });
+}
+
+
+</script>
 @endsection

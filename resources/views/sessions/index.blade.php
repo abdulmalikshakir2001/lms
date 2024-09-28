@@ -32,7 +32,24 @@
                             </div>
                         </div>
 
+                        
                         <div class="table-responsive text-nowrap p-5 m-0">
+                            <div class="date-filter row mb-5">
+                                <div class="col-md-3">
+                                    <label for="start_date">Start Date:</label>
+                                    <input type="date" id="start_date" class="form-control" />
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <label for="end_date">End Date:</label>
+                                    <input type="date" id="end_date" class="form-control" />
+                                </div>
+                                
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <button id="filter" class="btn btn-primary mt-2">Filter</button>
+                                    <button id="clear-filter" class="btn btn-secondary mt-2 mx-2">Clear</button>
+                                </div>
+                            </div>
                             <table class="table table-hover datatable" id="datatable">
                                 <thead>
                                     <tr>
@@ -44,6 +61,7 @@
                                         <th class="py-4">Program</th>
                                         <th class="py-4">Session For</th>
                                         <th class="py-4">Region</th>
+                                        <th class="py-4">Status</th>
                                         <th class="py-4">Start Date</th>
                                         <th class="py-4">End Date</th>
                                         <th class="py-4">Actions</th>
@@ -103,7 +121,25 @@ $(document).ready(function () {
     let table = $("#datatable").DataTable({
     processing: true,
     serverSide: true,
-    ajax: "{{ url('sessions-data') }}", // Server-side endpoint to fetch data
+    ajax: function (data, callback, settings) {
+            // Get the date filter values
+            const startDate = $('#start_date').val();
+            const endDate = $('#end_date').val();
+
+            // Add the date filter values to the AJAX request
+            $.ajax({
+                url: "{{ url('sessions-data') }}",
+                type: "GET",
+                data: {
+                    ...data,
+                    start_date: startDate,
+                    end_date: endDate,
+                },
+                success: function (response) {
+                    callback(response);
+                }
+            });
+        }, // Server-side endpoint to fetch data
     columns: [
         {
             data: 'id',
@@ -119,6 +155,7 @@ $(document).ready(function () {
         { data: 'program', name: 'program' },  // Program
         { data: 'session_for', name: 'session_for' },  // Session For
         { data: 'region', name: 'region' },  // Region
+        { data: 'status', name: 'status' },  // status
         { data: 'start_date', name: 'start_date' },  // Start Date
         { data: 'end_date', name: 'end_date' },  // End Date
         {
@@ -136,6 +173,15 @@ $(document).ready(function () {
     responsive: true,
     autoWidth: false
 });
+
+    $('#filter').click(function () {
+        table.draw(); // Redraw the table with new filters
+    });
+    $('#clear-filter').on('click', function() {
+        $('#start_date').val('');
+        $('#end_date').val('');
+        table.draw();
+    });
 
 
 

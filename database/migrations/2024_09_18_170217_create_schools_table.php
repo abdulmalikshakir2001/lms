@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('location');
             $table->string('contact');
             $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('trainer_id');
             $table->timestamps();
         });
     }

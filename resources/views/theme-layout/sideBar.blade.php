@@ -62,58 +62,93 @@
 
     <ul class="menu-inner py-1">
       <!-- Dashboards -->
-      <li class="menu-item {{ Route::is('dashboard') ? 'active' : '' }}">
-        <a href="{{ route('dashboard') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-home-smile"></i>
-            <div class="text-truncate" data-i18n="Dashboards">Dashboard</div>
-        </a>
-      </li> 
-      <li class="menu-item {{ Route::is('sessions.index') ? 'active' : '' }}">
-        <a href="{{ route('sessions.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-home-smile"></i>
-            <div class="text-truncate" data-i18n="Dashboards">Sessions</div>
-        </a>
-      </li> 
-      <li class="menu-item {{ Route::is('session_deliverables.index') ? 'active' : '' }}">
-        <a href="{{ route('session_deliverables.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-home-smile"></i>
-            <div class="text-truncate" data-i18n="Dashboards">Session Deliverables</div>
-        </a>
-      </li> 
-      <li class="menu-item {{ Route::is('schools.index') ? 'active' : '' }}">
-        <a href="{{ route('schools.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-home-smile"></i>
-            <div class="text-truncate" data-i18n="Dashboards">Schools</div>
-        </a>
-      </li> 
+      @if (auth()->user()->hasRole('Super Admin'))
+        <li class="menu-item {{ Route::is('admin.dashboard') ? 'active' : '' }}">
+          <a href="{{ route('admin.dashboard') }}" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-home-smile"></i>
+              <div class="text-truncate" data-i18n="Dashboards">Dashboard</div>
+          </a>
+        </li>
+      @elseif(auth()->user()->hasRole('Regional Facilitator'))
+        <li class="menu-item {{ Route::is('regFacilitator.dashboard') ? 'active' : '' }}">
+          <a href="{{ route('regFacilitator.dashboard') }}" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-home-smile"></i>
+              <div class="text-truncate" data-i18n="Dashboards">Dashboard</div>
+          </a>
+        </li>
+      @elseif(auth()->user()->hasRole('Local Facilitator'))
+        <li class="menu-item {{ Route::is('locFacilitator.dashboard') ? 'active' : '' }}">
+          <a href="{{ route('locFacilitator.dashboard') }}" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-home-smile"></i>
+              <div class="text-truncate" data-i18n="Dashboards">Dashboard</div>
+          </a>
+        </li>
+      @endif 
+      @can('View Sessions')
+      @if(!auth()->user()->hasRole('Super Admin'))
+        <li class="menu-item {{ Route::is('sessions.index') ? 'active' : '' }}">
+          <a href="{{ route('sessions.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-layout"></i>
+              <div class="text-truncate" data-i18n="Dashboards">Sessions</div>
+          </a>
+        </li>
+        @endif 
+      @endcan
+      @can('View Schools')
+        @if(!auth()->user()->hasRole('Super Admin'))
+            <li class="menu-item {{ Route::is('schools.index') ? 'active' : '' }}">
+                <a href="{{ route('schools.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bxs-school bx-md"></i>
+                    <div class="text-truncate" data-i18n="Dashboards">Schools</div>
+                </a>
+            </li>
+        @endif
+      @endcan
+
+      @can('View Parents')
+      @if(!auth()->user()->hasRole('Super Admin'))
       <li class="menu-item {{ Route::is('parents.index') ? 'active' : '' }}">
         <a href="{{ route('parents.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <i class="menu-icon tf-icons bx bx-male-female"></i>
             <div class="text-truncate" data-i18n="Dashboards">Parents</div>
         </a>
       </li> 
+      @endif
+      @endcan
+      @can('View Students')
+      @if(!auth()->user()->hasRole('Super Admin'))
       <li class="menu-item {{ Route::is('students.index') ? 'active' : '' }}">
         <a href="{{ route('students.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <i class="menu-icon tf-icons bx bx-child"></i>
             <div class="text-truncate" data-i18n="Dashboards">Students</div>
         </a>
       </li> 
+      @endif
+      @endcan
+      @can('View Teachers')
+      @if(!auth()->user()->hasRole('Super Admin'))
       <li class="menu-item {{ Route::is('teachers.index') ? 'active' : '' }}">
         <a href="{{ route('teachers.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <i class="menu-icon tf-icons bx bxs-user-rectangle"></i>
             <div class="text-truncate" data-i18n="Dashboards">Teachers</div>
         </a>
       </li> 
+      @endif
+      @endcan
+      @can('View Facilitators')
+      @if(!auth()->user()->hasRole('Super Admin'))
       <li class="menu-item {{ Route::is('facilitators.index') ? 'active' : '' }}">
         <a href="{{ route('facilitators.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-home-smile"></i>
+            <i class="menu-icon tf-icons bx bxs-user-rectangle"></i>
             <div class="text-truncate" data-i18n="Dashboards">Facilitators</div>
         </a>
       </li> 
-      
+      @endif 
+      @endcan
+      @can('View Users')     
       <li class="menu-item {{ Route::is('users.index')  || Route::is('roles.index') || Route::is('permissions.index') ? 'open' : '' }}">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="bx bx-sm bx-user me-1_5"></i>
+          <i class="menu-icon tf-icons bx bx-user me-1_5"></i>
           <div class="text-truncate" data-i18n="Dashboards">User Management</div>
         </a>
         <ul class="menu-sub">
@@ -142,15 +177,6 @@
           
         </ul>
       </li>
-
-     
-
-    
-  
- 
-
-  
-      
-     
+      @endcan
     </ul>
   </aside>

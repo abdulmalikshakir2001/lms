@@ -42,3 +42,136 @@ body > span > span > span.select2-search.select2-search--dropdown > input:focus{
     border: none;
     
 }
+/* Styling the select2 dropdown */
+/* General styling for select2 */
+.custom-select2 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #333;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #dcdcdc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.custom-select2:focus {
+    border: 1px solid #696cff; /* New blue focus border */
+    box-shadow: 0 0 10px rgba(105, 108, 255, 0.4);
+    background-color: #fff;
+}
+
+/* Custom styles for the dropdown arrow */
+.select2-container--default .select2-selection--single {
+    background-color: #f9f9f9;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove black border and apply custom color to search box */
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    border: 2px solid #696cff; /* New border color */
+    padding: 6px;
+    border-radius: 4px;
+    outline: none;
+}
+
+/* Style the search box when focused */
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+    border-color: #696cff; /* Keep blue border on focus */
+    box-shadow: 0 0 5px rgba(105, 108, 255, 0.4);
+}
+
+/* Dropdown hover effect */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #696cff;
+    color: #fff;
+}
+
+/* Dropdown arrow icon */
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #333 transparent;
+    border-width: 0 4px 4px 4px;
+    height: 0;
+    width: 0;
+    margin-top: 2px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    right: 10px;
+}
+
+/* Placeholder text styling */
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #999;
+    font-weight: 400;
+}
+
+/* Adjust spacing and padding for dropdown options */
+.select2-results__option {
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Styling the disabled state */
+.select2-container--default .select2-selection--single[aria-disabled="true"] {
+    background-color: #e9ecef;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.custom-card {
+    width: 18rem;
+    height: 250px;
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image covers the entire card */
+    /* transition: transform 0.3s ease; */
+    transform: scale(1.1); /* Zoom effect on hover */
+}
+
+
+.custom-card .card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    /* transition: opacity 0.3s ease; */
+    opacity: 1;
+}
+
+
+.custom-card h3 {
+    color: #fff;
+    font-size: 1.75rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Text shadow for better readability */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    /* transition: transform 0.3s ease; */
+    transform: translateY(-10px); /* Lift effect on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+ 

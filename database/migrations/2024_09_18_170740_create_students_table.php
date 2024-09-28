@@ -17,8 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id');
             $table->unsignedBigInteger('school_id');
             $table->unsignedBigInteger('program_id');
-            $table->unsignedBigInteger('session_id');
+            $table->foreignId('session_id')->constrained()->onDelete('cascade'); // Set up foreign key with cascade
             $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('trainer_id');
             $table->timestamps();
         });
     }

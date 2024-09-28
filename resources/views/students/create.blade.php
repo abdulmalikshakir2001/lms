@@ -127,6 +127,7 @@
                                         <div class="row justify-content-end">
                                             <div class="col-sm-10">
                                                 <input type="hidden" name="region_id" value="{{auth()->user()->region_id}}">
+                                                <input type="hidden" name="trainer_id" value="{{auth()->user()->id}}">
                                                 <button
                                                     type="submit"
                                                     class="btn btn-primary"

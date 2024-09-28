@@ -12,6 +12,23 @@ class Handler extends ExceptionHandler
      *
      * @var array<int, string>
      */
+
+    public function render($request, Throwable $exception)
+    {
+        // Check for Spatie's UnauthorizedException
+        if ($exception instanceof \Spatie\Permission\Exceptions\UnauthorizedException) {
+        // Flash a permission denied error message to the session
+        return redirect()->back()->with('error', 'Permission Denied!');
+        }
+
+        // Optionally, handle default 403 errors
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException && $exception->getStatusCode() == 403) {
+        return redirect()->back()->with('error', 'You do not have permission to access this page.');
+        }
+
+        return parent::render($request, $exception);
+    }
+
     protected $dontFlash = [
         'current_password',
         'password',

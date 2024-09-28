@@ -7,6 +7,8 @@ use App\Models\Schools;
 use App\Models\Sessions;
 use App\Models\Students;
 use App\Models\Teachers;
+use App\Models\User;
+use Hash;
 use Illuminate\Http\Request;
 
 class FacilitatorsController extends Controller
@@ -14,6 +16,13 @@ class FacilitatorsController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('permission:View Facilitators')->only('index');
+        $this->middleware('permission:Edit Facilitators')->only('edit');
+        $this->middleware('permission:Add Facilitators')->only('create');
+        $this->middleware('permission:Delete Facilitators')->only('destroy');
+    }
     public function index()
     {
         return view('facilitators.index');
@@ -24,7 +33,7 @@ class FacilitatorsController extends Controller
      */
     public function create()
     {
-        $sessions = Sessions::all();
+        $sessions = Sessions::where('region_id',auth()->user()->region_id)->get();
         return view('facilitators.create',compact('sessions'));
 
     }
@@ -45,13 +54,23 @@ class FacilitatorsController extends Controller
     $session = Sessions::find($request->input('session_id'));
 
     // Create a new Teacher instance
-    $teacher = new Facilitators();
-    $teacher->name = $request->input('name');          // Set the teacher's name
-    $teacher->contact = $request->input('contact');    // Set the teacher's contact
-    $teacher->session_id = $request->input('session_id'); // Set the session ID
-    $teacher->program_id = $session->program_id;       // Set the program ID based on the session
-    $teacher->region_id = auth()->user()->region_id;   // Set region ID from the logged-in user
-    $teacher->save();  // Save the teacher to the database
+    $facilitator = new Facilitators();
+    $facilitator->name = $request->input('name');          // Set the teacher's name
+    $facilitator->contact = $request->input('contact');    // Set the teacher's contact
+    $facilitator->session_id = $request->input('session_id'); // Set the session ID
+    $facilitator->program_id = $session->program_id;       // Set the program ID based on the session
+    $facilitator->region_id = auth()->user()->region_id;   // Set region ID from the logged-in user
+    $facilitator->save();  // Save the teacher to the database
+
+
+    $users = new User();
+    $users->name = $request->input('name');
+    $users->email = $request->input('email');
+    $users->user_type = $request->input('user_type');
+    $users->region_id = auth()->user()->region_id;
+    $users->password = Hash::make($request->input('password'));
+    $users->assignRole('local facilitator');
+    $users->save();
 
     // Redirect to the index page with a success message
     return redirect()->route('facilitators.index')->with('success', 'Facilitator added successfully.');
@@ -130,17 +149,19 @@ class FacilitatorsController extends Controller
 {
     if ($request->ajax()) {
         $teachers = Facilitators::select([
-                'facilitators.id',
-                'facilitators.name as facilitator_name',
-                'facilitators.contact',  // Assuming `contact` is a column in the teachers table
-                'regions.name as region_name',
-                'programs.name as program_name',
-                'sessions.name as session_name'
-            ])
-            ->leftJoin('regions', 'facilitators.region_id', '=', 'regions.id')
-            ->leftJoin('programs', 'facilitators.program_id', '=', 'programs.id')
-            ->leftJoin('sessions', 'facilitators.session_id', '=', 'sessions.id')
-            ->get();
+            'facilitators.id',
+            'facilitators.name as facilitator_name',
+            'facilitators.contact',  // Assuming `contact` is a column in the facilitators table
+            'regions.name as region_name',
+            'programs.name as program_name',
+            'sessions.name as session_name'
+        ])
+        ->leftJoin('regions', 'facilitators.region_id', '=', 'regions.id')
+        ->leftJoin('programs', 'facilitators.program_id', '=', 'programs.id')
+        ->leftJoin('sessions', 'facilitators.session_id', '=', 'sessions.id')
+        ->where('facilitators.region_id', auth()->user()->region_id) // Filter by user's region
+        ->get();
+
         
         return datatables()->of($teachers)
             ->addIndexColumn()  // Automatically add row index (for Sr No)

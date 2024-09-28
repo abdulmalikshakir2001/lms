@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('father_name');
             $table->string('mother_name');
             $table->unsignedBigInteger('region_id');
-            $table->unsignedBigInteger('program_id')->default(null);
-            $table->unsignedBigInteger('session_id')->default(null);
+            $table->unsignedBigInteger('program_id')->nullable();
+            $table->foreignId('session_id')->constrained()->onDelete('cascade')->nullable(); // Set up foreign key with cascade
+            $table->unsignedBigInteger('trainer_id');
             $table->timestamps();
         });
     }

@@ -109,40 +109,76 @@
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <label
-                              for="exampleFormControlSelect1"
-                              class="col-sm-2 col-form-label"
-                              >User Type</label
-                          >
-                          <div class="col-sm-10 mb-4">
-                              <select class="form-select" name="user_type" id="user_type" aria-label="Default select example" required>
-                                  <option selected>Select User Type</option>
-                                  <option value="user"
-                                   @php
-                                      if($user->user_type == 'user'){
-                                         echo "selected";
-                                      }
-                                  @endphp
-                                  >User</option>
-                                  <option value="intra trainer" 
-                                  @php
-                                      if($user->user_type == 'intra trainer'){
-                                         echo "selected";
-                                      }
-                                  @endphp
-                                  >Intra Trainer</option>
-                                  <option value="local trainer"
-                                  @php
-                                      if($user->user_type == 'local trainer'){
-                                         echo "selected";
-                                      }
-                                  @endphp
-                                  >Local Trainer</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div class="row" id="region_div"
+                        @if (auth()->user()->hasRole('Regional Facilitator'))
+                                        <div class="row">
+                                            <label
+                                                for="exampleFormControlSelect1"
+                                                class="col-sm-2 col-form-label"
+                                                >User Type</label
+                                            >
+                                            <div class="col-sm-10 mb-4">
+                                                <select class="form-select" name="user_type" id="user_type" aria-label="Default select example" disabled>
+                                                    <option>Select User Type</option>
+                                                    <option value="user">User</option>
+                                                    <option value="intra trainer">Intra Trainer</option>
+                                                    <option value="local trainer" selected>Local Trainer</option>
+                                                </select>
+                                                <input type="hidden" name="user_type" value="local trainer">
+                                            </div>
+                                        </div>
+                                        @else 
+                                        <div class="row">
+                                          <label
+                                              for="exampleFormControlSelect1"
+                                              class="col-sm-2 col-form-label"
+                                              >User Type</label
+                                          >
+                                          <div class="col-sm-10 mb-4">
+                                              <select class="form-select" name="user_type" id="user_type" aria-label="Default select example" required>
+                                                  <option selected>Select User Type</option>
+                                                  <option value="user"
+                                                   @php
+                                                      if($user->user_type == 'user'){
+                                                         echo "selected";
+                                                      }
+                                                  @endphp
+                                                  >User</option>
+                                                  <option value="intra trainer" 
+                                                  @php
+                                                      if($user->user_type == 'intra trainer'){
+                                                         echo "selected";
+                                                      }
+                                                  @endphp
+                                                  >Intra Trainer</option>
+                                                  <option value="local trainer"
+                                                  @php
+                                                      if($user->user_type == 'local trainer'){
+                                                         echo "selected";
+                                                      }
+                                                  @endphp
+                                                  >Local Trainer</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                        @endif
+                                        @if (auth()->user()->hasRole('Regional Facilitator'))
+                                            <div class="row" id="region_div"  style="display: none;">
+                                                <label for="exampleFormControlSelect2" class="col-sm-2 col-form-label">Regions</label>
+                                                <div class="col-sm-10 mb-4">
+                                                    <select class="form-select" name="region" id="exampleFormControlSelect2" aria-label="Default select example">
+                                                        <option>Select Region</option>
+                                                        @if ($regions->isNotEmpty())
+                                                            @foreach ($regions as $region)
+                                                                @if (auth()->user()->region_id == $region->id)
+                                                                <option value="{{ $region->id }}" selected>{{ $region->name }}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                </div>
+                                            </div> 
+                                        @else
+                                        <div class="row" id="region_div"
                       @if ($user->user_type == 'intra trainer')
                           
                       @else
@@ -164,22 +200,56 @@
                               </select>
                           </div>
                       </div>  
-                        <div class="row mb-6">
-                            <label class="col-sm-2 col-form-label" for="password">Roles</label>
-                            @if ($roles->isNotEmpty())
-                            @foreach ($roles as $role)
-                             
-                                 <div class="mb-6 col-sm-2">
-                                    <div class="form-check mt-3">
-                                         <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->name }}" id="defaultCheck-{{$role->id}}" {{ $hasRoles->contains($role->id) ? 'checked' : '' }}/>
-                                         <label class="form-check-label" for="defaultCheck-{{$role->id}}"> {{ $role->name }} </label>
-                                     </div>   
-                                 </div>
-                             
-                            
-                                @endforeach
-                            @endif
-                        </div>
+                                        @endif
+                                        @if (auth()->user()->hasRole('Regional Facilitator'))
+                                        <div class="row mb-6" style="display: none">
+                                            <label
+                                                class="col-sm-2 col-form-label"
+                                                for="password"
+                                                >Roles</label
+                                            >
+                                            @if ($roles->isNotEmpty())
+                                             @foreach($roles as $role)
+                                            <div class="mb-6 col-sm-2">
+                                                <div class="form-check mt-3">
+                                                    @if ($role->name == 'Local Facilitator')
+                                                        <input
+                                                        class="form-check-input"
+                                                        type="checkbox"
+                                                        name="roles[]"
+                                                        value="{{ $role->name }}"
+                                                        id="defaultCheck-{{$role->id}}"
+                                                        checked
+                                                        />
+                                                        <label
+                                                        class="form-check-label"
+                                                        for="defaultCheck-{{$role->id}}"
+                                                        >
+                                                        {{ $role->name }}
+                                                    </label>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                             @endif
+                                        </div>
+                                        @else
+                                        <div class="row mb-6">
+                                          <label class="col-sm-2 col-form-label" for="password">Roles</label>
+                                          @if ($roles->isNotEmpty())
+                                          @foreach ($roles as $role)
+                                               <div class="mb-6 col-sm-2">
+                                                  <div class="form-check mt-3">
+                                                       <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->name }}" id="defaultCheck-{{$role->id}}" {{ $hasRoles->contains($role->id) ? 'checked' : '' }}/>
+                                                       <label class="form-check-label" for="defaultCheck-{{$role->id}}"> {{ $role->name }} </label>
+                                                   </div>   
+                                               </div>
+                                              @endforeach
+                                          @endif
+                                      </div>
+                                        @endif 
+                       
+                        
                          
                         
                         

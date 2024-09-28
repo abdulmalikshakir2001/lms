@@ -12,7 +12,7 @@ use Illuminate\Routing\Controllers\Middleware;
 class RoleController extends Controller
 {
     
-    public function __construct()
+    public function __construct() 
     {
         $this->middleware('permission:View Roles')->only('index');
         $this->middleware('permission:Edit Roles')->only('edit');

@@ -23,5 +23,24 @@ class Sessions extends Model
     public function regions() {
         return $this->belongsTo(Regions::class, 'region_id');
     }
+
+    public function students()
+    {
+        return $this->hasMany(Students::class);
+    }
+
+    public function parents()
+    {
+        return $this->hasMany(Parents::class);
+    }
+
+    public function teachers()
+    {
+        return $this->hasMany(Teachers::class);
+    }
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+    ];
     use HasFactory;
 }

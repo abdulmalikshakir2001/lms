@@ -89,6 +89,31 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row mb-6">
+                                            <label
+                                                class="col-sm-2 col-form-label"
+                                                for="basic-icon-default-fullname"
+                                                >Facilitator Email</label
+                                            >
+                                            <div class="col-sm-10">
+                                                <div
+                                                    class="input-group input-group-merge"
+                                                >
+                                                    
+                                                    <input
+                                                        type="text"
+                                                        class="form-control"
+                                                        id="basic-icon-default-fullname"
+                                                        name="email"
+                                                        placeholder="John Doe"
+                                                        aria-label="John Doe"
+                                                        aria-describedby="basic-icon-default-fullname2"
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
                                         
                                         
                                         <div class="row mb-6">
@@ -115,6 +140,8 @@
                                         <div class="row justify-content-end">
                                             <div class="col-sm-10">
                                                 <input type="hidden" name="region_id" value="{{auth()->user()->region_id}}">
+                                                <input type="hidden" name="user_type" value="local trainer">
+                                                <input type="hidden" name="password" value="123456">
                                                 <button
                                                     type="submit"
                                                     class="btn btn-primary"
