@@ -29,7 +29,7 @@
                     href="javascript:void(0);"
                     data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                      <img src="{{asset('assets/img/avatars/1.png')}}" alt class="w-px-40 h-auto rounded-circle" />
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
@@ -38,20 +38,17 @@
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-3">
                             <div class="avatar avatar-online">
-                              <img src="assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                              <img src="{{asset('assets/img/avatars/1.png')}}" alt class="w-px-40 h-auto rounded-circle" />
                             </div>
                           </div>
                           <div class="flex-grow-1">
                             
-                            <h6 class="mb-0">
+                            <h6 class="mt-2">
                               @php
                                  echo ucfirst(auth()->user()->name);
                               @endphp
                             </h6>
-                            <small class="text-muted">
-                              
-                                {{-- {{ auth()->user()->roles->pluck('name')->implode(', ') }} <!-- Display roles --> --}}
-                            </small>
+                           
                         </div>
                         </div>
                       </a>
@@ -59,11 +56,7 @@
                     <li>
                       <div class="dropdown-divider my-1"></div>
                     </li>
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <i class="bx bx-user bx-md me-3"></i><span>My Profile</span>
-                      </a>
-                    </li>
+                   
                     
                     
                     <li>

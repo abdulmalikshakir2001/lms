@@ -31,13 +31,14 @@ return new class extends Migration
         $superAdminId = DB::table('users')->insertGetId([
             'name' => 'Super Admin',
             'email' => 'superadmin@gmail.com',
-            'password' => Hash::make('password'), // Hashing the password
+            'password' => Hash::make('123456'), // Hashing the password
             'user_type' => 'Super Admin',
             'region_id' => null,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
+        Role::create(['name' => 'Super Admin']);
         // Assign "Super Admin" role if the Role model exists
         if (Role::where('name', 'Super Admin')->exists()) {
             $superAdmin = User::find($superAdminId);

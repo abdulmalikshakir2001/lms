@@ -111,6 +111,7 @@
    
 $(document).ready(function () {
 
+    let table;
     $(document).ready(function () {
     let regionId = null;
     let qry = ""; // Default empty string for qry
@@ -123,7 +124,7 @@ $(document).ready(function () {
         console.log("Region ID: ", regionId);  // For debugging
 
         // Initialize DataTable
-        let table = $("#datatable").DataTable({
+         table = $("#datatable").DataTable({
             processing: true,
             serverSide: true,
             ajax: function (data, callback, settings) {
@@ -182,7 +183,7 @@ $(document).ready(function () {
         console.log("Region ID (Super Admin): ", regionId); // Debugging
 
         // Initialize DataTable
-        let table = $("#datatable").DataTable({
+         table = $("#datatable").DataTable({
             processing: true,
             serverSide: true,
             ajax: function (data, callback, settings) {
