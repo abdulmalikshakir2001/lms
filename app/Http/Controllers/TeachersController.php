@@ -106,7 +106,9 @@ class TeachersController extends Controller
             return view('teachers.edit',compact('sessions','teacher'));
         }else{
             $teacher = Teachers::findOrFail($id);
-            $sessions = Sessions::where('region_id',auth()->user()->region_id)->get();
+            $sessions = Sessions::where('region_id',auth()->user()->region_id)
+            ->where('trainer',auth()->user()->id)
+            ->get();
             return view('teachers.edit',compact('sessions','teacher'));
         }
 

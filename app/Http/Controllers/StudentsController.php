@@ -95,9 +95,9 @@ class StudentsController extends Controller
             return view('students.edit',compact('sessions','parents','student','schools'));
         }else{
             $student = Students::findOrFail($id);
-            $sessions = Sessions::get();
-            $parents = Parents::get();
-            $schools = Schools::get();
+            $sessions = Sessions::where('trainer',auth()->user()->id)->get();
+            $parents = Parents::where('trainer_id',auth()->user()->id)->get();
+            $schools = Schools::where('trainer_id',auth()->user()->id)->get();
             return view('students.edit',compact('sessions','parents','student','schools'));
         }
 

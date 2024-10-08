@@ -15,7 +15,7 @@
                             <!-- Logo -->
                             <div class="app-brand justify-content-center ">
                                 <a
-                                    href="index.html"
+                                    href="javascript:void(0)"
                                     class="app-brand-link gap-2"
                                 >
                                     <span class="app-brand-logo demo">

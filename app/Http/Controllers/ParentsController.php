@@ -90,7 +90,7 @@ class ParentsController extends Controller
         $sessions = Sessions::where('region_id',auth()->user()->region_id)->get();
         return view('parents.edit',compact('parent','sessions'));
         }else{
-        $sessions = Sessions::all();
+        $sessions = Sessions::where('trainer',auth()->user()->id)->get();
         return view('parents.edit',compact('parent','sessions'));
         }
 

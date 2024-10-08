@@ -33,14 +33,17 @@
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <select id="regionFilter" class="form-select">
-                                        <option value="">All Regions</option>
+                                        <option value="">All Regions </option>
                                         @foreach($regions as $region)
-                                            <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                            <option value="{{ $region->id }}" 
+                                                {{ isset($_GET['region_Id']) && $region->id == $_GET['region_Id'] ? 'selected' : '' }}>
+                                                {{ $region->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            @endif
+                        @endif
                             <table class="table" id="datatable">
                                 <thead>
                                     <tr>

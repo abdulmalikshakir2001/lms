@@ -149,5 +149,5 @@ var sessionsData = {!! json_encode($sessionsData) !!};
 
 
 </script>
-<script src="{{ asset('assets/chartjs/regChartjs.init.js') }}"></script>
+<script src="{{ asset('assets/chartjs/regchartjs.init.js') }}"></script>
 @endsection

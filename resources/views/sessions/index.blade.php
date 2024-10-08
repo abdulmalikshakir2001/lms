@@ -36,12 +36,12 @@
                         <div class="table-responsive text-nowrap p-5 m-0">
                             <div class="date-filter row mb-5">
                                 <div class="col-md-3">
-                                    <label for="start_date">Start Date:</label>
+                                    <label for="start_date">From:</label>
                                     <input type="date" id="start_date" class="form-control" />
                                 </div>
                                 
                                 <div class="col-md-3">
-                                    <label for="end_date">End Date:</label>
+                                    <label for="end_date">To:</label>
                                     <input type="date" id="end_date" class="form-control" />
                                 </div>
                                 

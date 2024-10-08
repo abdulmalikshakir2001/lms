@@ -1,6 +1,6 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo mb-5">
-      <a href="index.html" class="app-brand-link">
+      <a href="javascript:void(0)" class="app-brand-link">
         <span class="app-brand-logo demo">
           <img src="{{asset('assets\img\zetasoft.png')}}" width="80%" alt="">
         </span>
@@ -112,22 +112,8 @@
             </a>
           </li>
           @endcan
-          {{-- @can('View Roles')
-          <li class="menu-item {{ Route::is('roles.index') ? 'active' : '' }}">
-            <a href="{{ route('roles.index') }}" class="menu-link">
-              <div class="text-truncate" data-i18n="Analytics">Roles</div>
-            </a>
-          </li>
-          @endcan
-          
-          <li class="menu-item {{ Route::is('permissions.index') ? 'active' : '' }}">
-            <a href="{{ route('permissions.index') }}" class="menu-link">
-              <div class="text-truncate" data-i18n="Analytics">Permissions</div>
-            </a>
-          </li> --}}
-         
-          
-          
+      
+           
         </ul>
       </li>
       @endcan

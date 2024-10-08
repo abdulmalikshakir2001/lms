@@ -98,43 +98,35 @@
                       </div>
                        
                     </div>
-                    <div class="row mb-8">
-                        <h3 class="mt-3">Regional Information</h3>
-                        <div class="col-md-3 mx-5">
-                          <div class="m-4">
-                              <a href="{{ route('superAdmin.dashboard', 1) }}" class="text-decoration-none">
-                                  <div class="custom-card">
-                                      <img class="card-img" src="{{ asset('assets/img/regions/KPK_Image.jpg') }}" alt="KPK Region Image">
-                                      <!-- Overlay -->
-                                      <div class="card-overlay">
-                                          <h3>KPK</h3>
-                                      </div>
-                                  </div>
-                              </a>
-                          </div>
+                    <div class="row mb-2">
+                      <div class="col-md-6">
+                        <h3 class="mt-3 ">Regional Information</h3>
                       </div>
+                    </div>
+                  <div class="row mb-8 " style="margin-left: -50px" > 
                       
                       <div class="col-md-3 mx-5">
                         <div class="m-4">
-                            <a href="{{ route('superAdmin.dashboard', 2) }}" class="text-decoration-none">
+                            <a href="{{ route('superAdmin.dashboard', 1) }}" class="text-decoration-none">
                                 <div class="custom-card">
-                                    <img class="card-img" src="{{ asset('assets/img/regions/punjab_Image.jpg') }}" alt="KPK Region Image">
+                                    <img class="card-img" src="{{ asset('assets/img/regions/KPK_image.jpg') }}" alt="KPK Region Image">
                                     <!-- Overlay -->
                                     <div class="card-overlay">
-                                        <h3>Punjab</h3>
+                                        <h3>KPK</h3>
                                     </div>
                                 </div>
                             </a>
                         </div>
                     </div>
+                    
                     <div class="col-md-3 mx-5">
                       <div class="m-4">
-                          <a href="{{ route('superAdmin.dashboard', 4) }}" class="text-decoration-none">
+                          <a href="{{ route('superAdmin.dashboard', 2) }}" class="text-decoration-none">
                               <div class="custom-card">
-                                  <img class="card-img" src="{{ asset('assets/img/regions/bch_Image.jpg') }}" alt="KPK Region Image">
+                                  <img class="card-img" src="{{ asset('assets/img/regions/punjab_image.jpg') }}" alt="KPK Region Image">
                                   <!-- Overlay -->
                                   <div class="card-overlay">
-                                      <h3>Balochistan</h3>
+                                      <h3>Punjab</h3>
                                   </div>
                               </div>
                           </a>
@@ -142,57 +134,70 @@
                   </div>
                   <div class="col-md-3 mx-5">
                     <div class="m-4">
-                        <a href="{{ route('superAdmin.dashboard', 7) }}" class="text-decoration-none">
+                        <a href="{{ route('superAdmin.dashboard', 4) }}" class="text-decoration-none">
                             <div class="custom-card">
-                                <img class="card-img" src="{{ asset('assets/img/regions/isb_Image.jpg') }}" alt="KPK Region Image">
+                                <img class="card-img" src="{{ asset('assets/img/regions/bch_image.jpg') }}" alt="KPK Region Image">
                                 <!-- Overlay -->
                                 <div class="card-overlay">
-                                    <h3>Islamabad</h3>
+                                    <h3>Balochistan</h3>
                                 </div>
                             </div>
                         </a>
                     </div>
-                </div>
-                <div class="col-md-3 mx-5">
+                  </div>
+                  <div class="col-md-3 mx-5">
                   <div class="m-4">
-                      <a href="{{ route('superAdmin.dashboard', 3) }}" class="text-decoration-none">
+                      <a href="{{ route('superAdmin.dashboard', 7) }}" class="text-decoration-none">
                           <div class="custom-card">
-                              <img class="card-img" src="{{ asset('assets/img/regions/sindh_Image.jpg') }}" alt="KPK Region Image">
+                              <img class="card-img" src="{{ asset('assets/img/regions/isb_image.jpg') }}" alt="KPK Region Image">
                               <!-- Overlay -->
                               <div class="card-overlay">
-                                  <h3>Sindh</h3>
+                                  <h3>Islamabad</h3>
                               </div>
                           </div>
                       </a>
                   </div>
-              </div>
-              <div class="col-md-3 mx-5">
-                <div class="m-4">
-                    <a href="{{ route('superAdmin.dashboard', 6) }}" class="text-decoration-none">
+                  </div>
+                  <div class="col-md-3 mx-5">
+                  <div class="m-4">
+                    <a href="{{ route('superAdmin.dashboard', 3) }}" class="text-decoration-none">
                         <div class="custom-card">
-                            <img class="card-img" src="{{ asset('assets/img/regions/gb_Image.jpg') }}" alt="KPK Region Image">
+                            <img class="card-img" src="{{ asset('assets/img/regions/sindh_image.jpg') }}" alt="KPK Region Image">
                             <!-- Overlay -->
                             <div class="card-overlay">
-                                <h3>Gilgit Baltistan</h3>
+                                <h3>Sindh</h3>
                             </div>
                         </div>
                     </a>
-                </div>
-            </div>
-            <div class="col-md-3 mx-5">
-              <div class="m-4">
-                  <a href="{{ route('superAdmin.dashboard', 5) }}" class="text-decoration-none">
+                  </div>
+                  </div>
+                  <div class="col-md-3 mx-5">
+                  <div class="m-4">
+                  <a href="{{ route('superAdmin.dashboard', 6) }}" class="text-decoration-none">
                       <div class="custom-card">
-                          <img class="card-img" src="{{ asset('assets/img/regions/ajk_Image.jpg') }}" alt="KPK Region Image">
+                          <img class="card-img" src="{{ asset('assets/img/regions/gb_image.jpg') }}" alt="KPK Region Image">
                           <!-- Overlay -->
                           <div class="card-overlay">
-                              <h3>AJK</h3>
+                              <h3>Gilgit Baltistan</h3>
                           </div>
                       </div>
                   </a>
-              </div>
-          </div>
+                  </div>
+                  </div>
+                  <div class="col-md-3 mx-5">
+                  <div class="m-4">
+                  <a href="{{ route('superAdmin.dashboard', 5) }}" class="text-decoration-none">
+                    <div class="custom-card">
+                        <img class="card-img" src="{{ asset('assets/img/regions/ajk_Image.jpg') }}" alt="KPK Region Image">
+                        <!-- Overlay -->
+                        <div class="card-overlay">
+                            <h3>AJK</h3>
+                        </div>
                     </div>
+                  </a>
+                  </div>
+                  </div>
+                  </div>
 
                     <div class="row">
                         <div class="col-xl-12">

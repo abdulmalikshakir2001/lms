@@ -123,7 +123,7 @@ class SchoolsController extends Controller
             
         }else {
             $school->delete();
-            if (!auth()->user()->hasRole('Super Admin')) {
+            if (auth()->user()->hasRole('Super Admin')) {
                 return redirect()->route('tables.schools')->with('success', 'School deleted successfully.');
             }else{
                 return redirect()->route('schools.index')->with('success', 'School deleted successfully.');

@@ -38,14 +38,17 @@
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <select id="regionFilter" class="form-select">
-                                        <option value="">All Regions</option>
+                                        <option value="">All Regions </option>
                                         @foreach($regions as $region)
-                                            <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                            <option value="{{ $region->id }}" 
+                                                {{ isset($_GET['region_Id']) && $region->id == $_GET['region_Id'] ? 'selected' : '' }}>
+                                                {{ $region->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            @endif
+                        @endif
                             <table class="table" id="datatable">
                                 <thead>
                                     <tr>
@@ -107,6 +110,10 @@
         $('#deleteForm').attr('action', formAction); // Set the form action URL dynamically
     });
 
+    $('#confirmDelete').on('click', function () {
+    $('#deleteForm').submit();  // Submit the form when OK is clicked
+    });
+
 
     $(document).ready(function () {
         // Initialize DataTable
@@ -145,31 +152,6 @@
             table.ajax.reload(); // Reload the table with the selected region
         });
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // Handle Select All checkbox
     $('#select-all').on('click', function() {

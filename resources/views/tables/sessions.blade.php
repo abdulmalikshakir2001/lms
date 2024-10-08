@@ -2,6 +2,8 @@
 @extends('theme-layout.page-title')
 @section('title', 'LMS | Sessions')
 @section('content')
+
+
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
         <!-- Menu -->
@@ -30,18 +32,22 @@
                         
                         <div class="table-responsive text-nowrap p-5 m-0">
                             
-                                    @if (auth()->user()->hasRole('Super Admin'))
+                            @if (auth()->user()->hasRole('Super Admin'))
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <select id="regionFilter" class="form-select">
-                                        <option value="">All Regions</option>
+                                        <option value="">All Regions </option>
                                         @foreach($regions as $region)
-                                            <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                            <option value="{{ $region->id }}" 
+                                                {{ isset($_GET['region_Id']) && $region->id == $_GET['region_Id'] ? 'selected' : '' }}>
+                                                {{ $region->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            @endif
+                        @endif
+                        
                                 
                             <div class="date-filter row mb-3">
                                 <div class="col-md-3">
@@ -172,9 +178,17 @@ $(document).ready(function () {
     } else {
         // If user is Super Admin
 
-        document.getElementById('regionFilter').addEventListener('change', function () {
-            console.log("Region Filter Changed");
-            table.draw();
+        document.addEventListener('DOMContentLoaded', function () {
+            const regionFilter = document.getElementById('regionFilter');
+            
+            // Call the event when the page is loaded
+            regionFilter.dispatchEvent(new Event('change'));
+
+            // Add the change event listener
+            regionFilter.addEventListener('change', function () {
+                console.log("Region Filter Changed");
+                table.draw();
+            });
         });
 
         regionId = "{{ $regionId }}"; // Get the regionId from Blade or null

@@ -1,6 +1,6 @@
 @extends('theme-layout.layout')
 @extends('theme-layout.page-title')
-@section('title', 'Students | Create') @section('content')
+@section('title', 'Facilitators | Create') @section('content')
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
         <!-- Menu -->
