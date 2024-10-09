@@ -86,8 +86,17 @@ Route::middleware('auth')->group(function () {
     Route::post('sessions/bulk-delete', [SessionsController::class, 'bulkDelete'])->name('sessions.bulkDelete');
     Route::get('sessions/downloadDeliverables/{id}', [SessionsController::class, 'downloadDeliverables'])->name('sessions.downloadDeliverables');
     Route::get('sessions/downloadSingleDeliverable/{file}', [SessionsController::class, 'downloadSingleDeliverable'])->name('sessions.downloadSingleDeliverable');
-
-
+    Route::get('sessionFor-teachers/{id}', [SessionsController::class, 'teacherList'])->name('sessionFor.teacherList');
+    Route::get('sessionForTeachersData/{id}', [SessionsController::class, 'sessionForTeachers'])->name('sessionFor.teachers');
+    Route::get('sessionFor-students/{id}', [SessionsController::class, 'studentList'])->name('sessionFor.studentList');
+    Route::get('sessionForStudentsData/{id}', [SessionsController::class, 'sessionForStudents'])->name('sessionFor.students');
+    
+    Route::get('sessionFor-parents/{id}', [SessionsController::class, 'parentList'])->name('sessionFor.parentList');
+    Route::get('sessionForParentsData/{id}', [SessionsController::class, 'sessionForParents'])->name('sessionFor.parents');
+    
+    Route::get('sessionFor-facilitators/{id}', [SessionsController::class, 'facilitatorList'])->name('sessionFor.facilitatorList');
+    Route::get('sessionForFacilitatorsData/{id}', [SessionsController::class, 'sessionForFacilitators'])->name('sessionFor.parents');
+   
     // Session deliverables
     Route::get('session_deliverables',[SessionDeliverablesController::class, 'index'])->name('session_deliverables.index');
     Route::get('session_deliverables-data', [SessionDeliverablesController::class, 'getDeliverablesData'])->name('session_deliverables.data');

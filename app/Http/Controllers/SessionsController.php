@@ -480,6 +480,164 @@ class SessionsController extends Controller
         }
     }
     
+
+
+
+    public function teacherList($id){
+
+        return view('sessions.sessionFor.teachers',['sessionId' => $id]);
+
+    }
+    public function studentList($id){
+
+        return view('sessions.sessionFor.students',['sessionId' => $id]);
+
+    }
+    public function parentList($id){
+
+        return view('sessions.sessionFor.parents',['sessionId' => $id]);
+
+    }
+    public function facilitatorList($id){
+
+        return view('sessions.sessionFor.facilitators',['sessionId' => $id]);
+
+    }
+
+    public function sessionForTeachers(Request $request, $sessionId)
+    {
+        if ($request->ajax()) {
+            try {
+                // Fetch session data joined with teacher (user), region, program, etc.
+                $sessions = \DB::table('teachers')
+                    ->leftJoin('sessions', 'teachers.session_id', '=', 'sessions.id') // Join with sessions
+                    ->leftJoin('regions', 'sessions.region_id', '=', 'regions.id') // Join with regions
+                    ->leftJoin('programs', 'sessions.program_id', '=', 'programs.id') // Join with programs
+                    ->select(
+                        'sessions.id',
+                        'teachers.name as teacher_name', // Teacher name
+                        'teachers.contact as contact',   // Teacher contact
+                        'regions.name as region_name',   // Region name
+                        'programs.name as program_name', // Program name
+                        'sessions.name as session_name'  // Session name
+                    )
+                    ->where('teachers.session_id', $sessionId); // Filter by session
+
+                // If region filter is applied
+                if ($request->region_id) {
+                    $sessions->where('sessions.region_id', $request->region_id);
+                }
+
+                return datatables()->of($sessions)
+                    ->addIndexColumn() // Adds DT_RowIndex for indexing in DataTable
+                    ->make(true); // Return DataTables response
+            } catch (\Exception $e) {
+                \Log::error('Error fetching session data: ' . $e->getMessage());
+                return response()->json(['error' => 'Unable to fetch data'], 500);
+            }
+        }
+    }
+
+    public function sessionForStudents(Request $request, $sessionId)
+    {
+        if ($request->ajax()) {
+            try {
+                // Fetch student data joined with session, region, and program
+                $students = \DB::table('students')
+                    ->leftJoin('sessions', 'students.session_id', '=', 'sessions.id') // Join with sessions table
+                    ->leftJoin('parents', 'students.parent_id', '=', 'parents.id') // Join with sessions table
+                    ->leftJoin('regions', 'sessions.region_id', '=', 'regions.id') // Join with regions table
+                    ->leftJoin('programs', 'sessions.program_id', '=', 'programs.id') // Join with programs table
+                    ->select(
+                        'students.id',              // Student ID for Sr No
+                        'students.name as name',    // Student name
+                        'parents.father_name',     // Father Name
+                        'regions.name as region_name', // Region name
+                        'programs.name as program_name', // Program name
+                        'sessions.name as session_name'  // Session name
+                    )
+                    ->where('students.session_id', $sessionId); // Filter by session ID
+
+                // Apply region filter if provided
+                if ($request->region_id) {
+                    $students->where('sessions.region_id', $request->region_id);
+                }
+
+                return datatables()->of($students)
+                    ->addIndexColumn() // Adds DT_RowIndex for indexing in DataTable
+                    ->make(true); // Return DataTables response
+            } catch (\Exception $e) {
+                \Log::error('Error fetching student data: ' . $e->getMessage());
+                return response()->json(['error' => 'Unable to fetch data'], 500);
+            }
+        }
+    }
+    public function sessionForParents(Request $request, $sessionId)
+    {
+        if ($request->ajax()) {
+            try {
+                // Fetch parent data joined with session, region, and program
+                $parents = \DB::table('parents')
+                    ->leftJoin('regions', 'parents.region_id', '=', 'regions.id')    // Join with regions table
+                    ->leftJoin('programs', 'parents.program_id', '=', 'programs.id') // Join with programs table
+                    ->select(
+                        'parents.father_name',         // Father Name
+                        'parents.mother_name',         // Mother Name
+                        'regions.name as region_name', // Region name
+                        'programs.name as program_name'// Program name
+                    )
+                    ->where('session_id', $sessionId); // Filter by session 
+
+                // Apply region filter if provided
+                if ($request->region_id) {
+                    $parents->where('regions.id', $request->region_id); // Ensure filtering by region
+                }
+
+                return datatables()->of($parents)
+                    ->addIndexColumn() // Adds DT_RowIndex for indexing in DataTable
+                    ->make(true); // Return DataTables response
+            } catch (\Exception $e) {
+                \Log::error('Error fetching parent data: ' . $e->getMessage());
+                return response()->json(['error' => 'Unable to fetch data'], 500);
+            }
+        }
+    }
+    
+    public function sessionForFacilitators(Request $request, $sessionId)
+    {
+        if ($request->ajax()) {
+            try {
+                // Fetch parent data joined with session, region, and program
+                $parents = \DB::table('facilitators')
+                    ->leftJoin('regions', 'facilitators.region_id', '=', 'regions.id')    // Join with regions table
+                    ->leftJoin('programs', 'facilitators.program_id', '=', 'programs.id') // Join with programs table
+                    ->select(
+                        'facilitators.name',         // Father Name
+                        'facilitators.contact',         // Mother Name
+                        'regions.name as region_name', // Region name
+                        'programs.name as program_name'// Program name
+                    )
+                    ->where('facilitators.session_id', $sessionId); // Filter by session 
+
+                // Apply region filter if provided
+                if ($request->region_id) {
+                    $parents->where('regions.id', $request->region_id); // Ensure filtering by region
+                }
+
+                return datatables()->of($parents)
+                    ->addIndexColumn() // Adds DT_RowIndex for indexing in DataTable
+                    ->make(true); // Return DataTables response
+            } catch (\Exception $e) {
+                \Log::error('Error fetching parent data: ' . $e->getMessage());
+                return response()->json(['error' => 'Unable to fetch data'], 500);
+            }
+        }
+    }
+    
+
+
+    
+    
     
     
 

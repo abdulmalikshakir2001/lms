@@ -249,6 +249,11 @@ $(document).ready(function () {
 });
 
 
+regionFilter.addEventListener('change', function () {
+        console.log("Region Filter Changed");
+        table.draw();
+});
+
 
 $('#filter').click(function () {
     table.draw(); // Redraw the table with the selected filters

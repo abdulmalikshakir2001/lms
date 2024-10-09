@@ -146,8 +146,6 @@ var schoolsData = {!! json_encode($schoolsData) !!};
 var regionName = {!! json_encode($regionName) !!};
 var sessionsData = {!! json_encode($sessionsData) !!};
 
-
-
 </script>
 <script src="{{ asset('assets/chartjs/regchartjs.init.js') }}"></script>
 @endsection

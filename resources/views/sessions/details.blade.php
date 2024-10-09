@@ -26,36 +26,41 @@
               <div class="row">
                 @if ($teachers > 0)
                 <div class="col-3 mb-6">
-                  <div class="card h-100">
-                    <div class="card-body">
-                      <div class="card-title d-flex align-items-start justify-content-between mb-4">
-                        <div class="avatar flex-shrink-0">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="user"><path fill="#6563FF" d="M15.71,12.71a6,6,0,1,0-7.42,0,10,10,0,0,0-6.22,8.18,1,1,0,0,0,2,.22,8,8,0,0,1,15.9,0,1,1,0,0,0,1,.89h.11a1,1,0,0,0,.88-1.1A10,10,0,0,0,15.71,12.71ZM12,12a4,4,0,1,1,4-4A4,4,0,0,1,12,12Z"></path></svg>
+                    <a href="{{route('sessionFor.teacherList',$session->id)}}" class="">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between mb-4">
+                          <div class="avatar flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="user"><path fill="#6563FF" d="M15.71,12.71a6,6,0,1,0-7.42,0,10,10,0,0,0-6.22,8.18,1,1,0,0,0,2,.22,8,8,0,0,1,15.9,0,1,1,0,0,0,1,.89h.11a1,1,0,0,0,.88-1.1A10,10,0,0,0,15.71,12.71ZM12,12a4,4,0,1,1,4-4A4,4,0,0,1,12,12Z"></path></svg>
+                          </div>
                         </div>
+                        <p class="mb-1">Teachers</p>
+                        <h4 class="card-title mb-3">{{$teachers}}</h4>
                       </div>
-                      <p class="mb-1">Teachers</p>
-                      <h4 class="card-title mb-3">{{$teachers}}</h4>
                     </div>
+                  </a>
                   </div>
-                </div>
                 @endif
                 @if($students > 0)
                 <div class="col-3 mb-6">
-                  <div class="card h-100">
-                    <div class="card-body">
-                      <div class="card-title d-flex align-items-start justify-content-between mb-4">
-                        <div class="avatar flex-shrink-0">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="user"><path fill="#6563FF" d="M15.71,12.71a6,6,0,1,0-7.42,0,10,10,0,0,0-6.22,8.18,1,1,0,0,0,2,.22,8,8,0,0,1,15.9,0,1,1,0,0,0,1,.89h.11a1,1,0,0,0,.88-1.1A10,10,0,0,0,15.71,12.71ZM12,12a4,4,0,1,1,4-4A4,4,0,0,1,12,12Z"></path></svg>
+                    <a href="{{route('sessionFor.studentList',$session->id)}}" class="">
+                    <div class="card h-100">
+                      <div class="card-body">
+                        <div class="card-title d-flex align-items-start justify-content-between mb-4">
+                          <div class="avatar flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="user"><path fill="#6563FF" d="M15.71,12.71a6,6,0,1,0-7.42,0,10,10,0,0,0-6.22,8.18,1,1,0,0,0,2,.22,8,8,0,0,1,15.9,0,1,1,0,0,0,1,.89h.11a1,1,0,0,0,.88-1.1A10,10,0,0,0,15.71,12.71ZM12,12a4,4,0,1,1,4-4A4,4,0,0,1,12,12Z"></path></svg>
+                          </div>
                         </div>
+                        <p class="mb-1">Students</p>
+                        <h4 class="card-title mb-3">{{$students}}</h4>
                       </div>
-                      <p class="mb-1">Students</p>
-                      <h4 class="card-title mb-3">{{$students}}</h4>
                     </div>
+                  </a>
                   </div>
-                </div>
                 @endif
                 @if($parents > 0)
                 <div class="col-3 mb-6">
+                  <a href="{{route('sessionFor.parentList',$session->id)}}" class="">
                   <div class="card h-100">
                     <div class="card-body">
                       <div class="card-title d-flex align-items-start justify-content-between mb-4">
@@ -67,10 +72,12 @@
                       <h4 class="card-title mb-3">{{$parents}}</h4>
                     </div>
                   </div>
+                  </a>
                 </div>
                 @endif
                 @if($facilitators > 0)
                 <div class="col-3 mb-6">
+                  <a href="{{route('sessionFor.facilitatorList',$session->id)}}" class="">
                   <div class="card h-100">
                     <div class="card-body">
                       <div class="card-title d-flex align-items-start justify-content-between mb-4">
@@ -82,6 +89,7 @@
                       <h4 class="card-title mb-3">{{$facilitators}}</h4>
                     </div>
                   </div>
+                  </a>
                 </div>
                 @endif
 
